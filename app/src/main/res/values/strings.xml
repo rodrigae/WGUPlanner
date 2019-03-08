@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">WGU Planner</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">WGU Planner</string>
+    <string name="nav_header_subtitle">https://my.wgu.edu</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="courses">Courses</string>
+    <string name="terms">Terms</string>
+    <string name="assessment">Assessment</string>
+    <string name="mentors">Mentors</string>
+</resources>
