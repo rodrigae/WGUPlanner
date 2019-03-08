@@ -1,15 +1,15 @@
-package com.example.wguplanner;
+package wguplanner_details;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
-import wguplanner_details.CourseDetailsActivity;
-public class CourseActivity extends MainActivity {
+
+import com.example.wguplanner.R;
+import com.example.wguplanner.MainActivity;
+public class AssessmentDetailsActivity extends MainActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -17,15 +17,16 @@ public class CourseActivity extends MainActivity {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View contentView = inflater.inflate(R.layout.app_main_course, null, false);
+        View contentView = inflater.inflate(R.layout.app_bar_main_assessment, null, false);
        // drawer.addView(contentView, 0);
         drawer.addView(contentView,0);
-        fab = (FloatingActionButton) findViewById(R.id.addCourses);
+        fab = (FloatingActionButton) findViewById(R.id.addAssessment);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(CourseActivity.this, CourseDetailsActivity.class));
-                           }
+                Snackbar.make(view, "Replace to add new Assessment", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
         });
 
         // drawer.setLayoutParams(null);

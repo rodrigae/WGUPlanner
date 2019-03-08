@@ -29,6 +29,26 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name="wguplanner_details.TermDetailsActivity"
+            android:label="@string/termdetails"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name="wguplanner_details.CourseDetailsActivity"
+            android:label="@string/coursedetails"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name="wguplanner_details.MentorDetailsActivity"
+            android:label="@string/Mentordetails"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name="wguplanner_details.AssessmentDetailsActivity"
+            android:label="@string/Assessdetails"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".AssessmentActivity"
             android:label="@string/assessment"
             android:theme="@style/AppTheme.NoActionBar">

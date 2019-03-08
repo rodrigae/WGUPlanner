@@ -10,4 +10,10 @@
     <string name="terms">Terms</string>
     <string name="assessment">Assessment</string>
     <string name="mentors">Mentors</string>
+    <string name="termdetails">Term Details</string>
+    <string name="coursedetails">Course Details</string>
+    <string name="Assessdetails">Assessment Details</string>
+    <string name="Mentordetails">Mentor Details</string>
+    <string name="backbtn">back</string>
+
 </resources>
