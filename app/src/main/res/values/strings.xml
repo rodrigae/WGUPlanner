@@ -15,5 +15,7 @@
     <string name="Assessdetails">Assessment Details</string>
     <string name="Mentordetails">Mentor Details</string>
     <string name="backbtn">back</string>
+    <string name="saveToolbar">Save</string>
+    <string name="menu_delete">Delete</string>
 
 </resources>

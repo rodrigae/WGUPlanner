@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 
 import com.example.wguplanner.R;
@@ -17,21 +18,25 @@ public class MentorDetailsActivity extends MainActivity {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View contentView = inflater.inflate(R.layout.app_bar_main_mentors, null, false);
-       // drawer.addView(contentView, 0);
+        View contentView = inflater.inflate(R.layout.app_main_mentor_detail, null, false);
+        // drawer.addView(contentView, 0);
         drawer.addView(contentView,0);
-        fab = (FloatingActionButton) findViewById(R.id.addMentors);
+
+
+        fab = (FloatingActionButton) findViewById(R.id.saveMentor);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace to add new mentors", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Replace to add save term detail", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
-
-        // drawer.setLayoutParams(null);
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        return true;
+    }
 
 }

@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/assesstoolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/design_default_color_primary_dark"
@@ -20,7 +20,8 @@
         <ListView
             android:id="@+id/AssessListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -32,6 +33,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/design_default_color_primary_dark"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:srcCompat="@drawable/ic_menu_add" />
 
 </android.support.design.widget.CoordinatorLayout>

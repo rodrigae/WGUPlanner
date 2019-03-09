@@ -1,11 +1,15 @@
 package com.example.wguplanner;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import wguplanner_details.CourseDetailsActivity;
+import wguplanner_details.TermDetailsActivity;
 
 public class TermActivity extends MainActivity {
 
@@ -22,8 +26,7 @@ public class TermActivity extends MainActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace to add new term", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivity(new Intent(TermActivity.this, TermDetailsActivity.class));
             }
         });
 

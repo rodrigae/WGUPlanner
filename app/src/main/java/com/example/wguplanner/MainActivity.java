@@ -19,11 +19,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
   protected  DrawerLayout drawer = null;
   protected FloatingActionButton fab = null;
+  protected Toolbar toolbar = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.maintoolbar);
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -78,21 +79,28 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_term) {
             Intent course = new Intent(this, TermActivity.class);
             startActivity(course);
+            item.setChecked(true);
         } else if (id == R.id.nav_course) {
             Intent course = new Intent(this, CourseActivity.class);
             startActivity(course);
-
+            item.setChecked(true);
         } else if (id == R.id.nav_assessment) {
             Intent course = new Intent(this, AssessmentActivity.class);
             startActivity(course);
         } else if (id == R.id.nav_mentors) {
             Intent course = new Intent(this, MentorActivity.class);
             startActivity(course);
+            item.setChecked(true);
         } else if (id == R.id.nav_home) {
             Intent course = new Intent(this, MainActivity.class);
             startActivity(course);
+            item.setChecked(true);
 
+        }else{
+            item.setChecked(false);
         }
+
+
 
         return true;
     }

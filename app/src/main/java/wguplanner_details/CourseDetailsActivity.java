@@ -9,8 +9,10 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatCallback;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 
 import com.example.wguplanner.CourseActivity;
@@ -18,12 +20,18 @@ import com.example.wguplanner.MainActivity;
 import com.example.wguplanner.R;
 
 
-public class CourseDetailsActivity extends MainActivity {
+public class CourseDetailsActivity extends MainActivity implements AppCompatCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.app_main_course_detail);
+
+        LayoutInflater inflater = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View contentView = inflater.inflate(R.layout.app_main_course_detail, null, false);
+        // drawer.addView(contentView, 0);
+        drawer.addView(contentView,0);
+
 
         fab = (FloatingActionButton) findViewById(R.id.saveCourse);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -35,5 +43,10 @@ public class CourseDetailsActivity extends MainActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        return true;
+    }
 
 }

@@ -2,7 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
-    android:id="@+id/mainTerm"
+    android:id="@+id/TermCourse"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,28 +12,31 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/termtoolbar"
+            android:id="@+id/detailtermToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/design_default_color_primary_dark"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:menu="@menu/details_toolbar"
+            app:title="@string/termdetails"
+            >
 
-        <ListView
-            android:id="@+id/termListView"
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white" />
+            android:layout_height="match_parent">
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addTerm"
+        android:id="@+id/saveTerm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/design_default_color_primary_dark"
-        app:srcCompat="@drawable/ic_menu_add" />
+        app:srcCompat="@android:drawable/ic_menu_save" />
 
 </android.support.design.widget.CoordinatorLayout>
