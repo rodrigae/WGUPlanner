@@ -18,16 +18,16 @@ public class AssessmentDetailsActivity extends MainActivity {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View contentView = inflater.inflate(R.layout.app_main_term_detail, null, false);
+        View contentView = inflater.inflate(R.layout.app_main_assessment_detail, null, false);
         // drawer.addView(contentView, 0);
         drawer.addView(contentView,0);
 
 
-        fab = (FloatingActionButton) findViewById(R.id.saveTerm);
+        fab = (FloatingActionButton) findViewById(R.id.saveAssessment);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace to add save term detail", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Replace to add save assess ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
