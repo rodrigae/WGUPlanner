@@ -16,13 +16,14 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import Database.dbSqlLiteManager;
+import Utilities.TermData;
 import models.Term;
 import wguplanner_details.CourseDetailsActivity;
 import wguplanner_details.TermDetailsActivity;
 
 public class TermActivity extends MainActivity {
 
-    TreeMap<String, Term> TermList = new TreeMap<>();
+
     ArrayList<String> items = new ArrayList<>();
     ArrayAdapter<String> adapter;
 
@@ -50,7 +51,7 @@ public class TermActivity extends MainActivity {
     private void LoadTermList(){
         //load the term list
         Cursor c = null;
-
+        TreeMap<String, Term> data = new TreeMap<>();
         try {
             Term termItem = null;
             //get the list
@@ -66,10 +67,11 @@ public class TermActivity extends MainActivity {
                     termItem = new Term(c.getString(3), c.getString(4), c.getString(0), c.getString(1),
                             c.getString(2), c.getString(5), c.getString(6), c.getString(7));
                     items.add(c.getString(0));// Add items to the adapter
-                    TermList.put(c.getString(0),termItem);//add the list of items to the treemap for later retrival
+                    data.put(c.getString(0),termItem);//add the list of items to the treemap for later retrival
                    } while (c.moveToNext());
 
             }
+            TermData.setTermList(data);
             termListAdpt. setAdapter(adapter);
             database.close();
         }catch(Exception e){

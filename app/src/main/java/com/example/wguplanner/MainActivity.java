@@ -16,14 +16,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import java.util.TreeMap;
+
 import Database.dbSqlLiteManager;
+import models.Term;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
   protected  DrawerLayout drawer = null;
   protected FloatingActionButton fab = null;
   protected Toolbar toolbar = null;
   protected SQLiteDatabase database = null;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

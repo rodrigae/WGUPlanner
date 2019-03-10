@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <data>
-        <variable name="Term" type="models.Term"/>
-    </data>
-
-<android.support.design.widget.CoordinatorLayout
+<android.support.design.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/TermCourse"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <android.support.design.widget.AppBarLayout
@@ -29,9 +24,23 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/termTitlelabel2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="216dp"
+            android:layout_marginLeft="216dp"
+            android:layout_marginTop="164dp"
+            android:text="@string/EndDateLabel"
+            android:textColor="@android:color/background_dark"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/reminderLabel2"
@@ -40,21 +49,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="360dp"
-            android:text="Assign Assessment"
-            android:textColor="@android:color/background_dark"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/reminderLabel4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="268dp"
-
-            android:layout_marginLeft="268dp"
-            android:layout_marginTop="356dp"
-            android:text="Assign Mentor"
+            android:text="Courses"
             android:textColor="@android:color/background_dark"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +69,6 @@
             android:gravity="top"
             android:hint="Notes"
             android:inputType="textMultiLine"
-            android:text="@{Term.notes}"
             android:singleLine="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -130,13 +124,12 @@
             android:layout_marginRight="253dp"
             android:background="@android:color/background_light"
             android:ems="10"
-            android:text="@{Term.startDate}"
             android:inputType="date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-       <TextView
+        <TextView
             android:id="@+id/termTitlelabel4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -177,7 +170,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-         <EditText
+        <EditText
             android:id="@+id/EndDateEditText"
             style="@style/custom_date"
             android:layout_width="wrap_content"
@@ -186,37 +179,30 @@
             android:layout_marginLeft="216dp"
             android:layout_marginTop="188dp"
             android:layout_marginEnd="46dp"
-            android:background="@android:color/background_light"
             android:layout_marginRight="46dp"
+            android:background="@android:color/background_light"
             android:ems="10"
             android:inputType="date"
 
-             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ListView
-            android:layout_width="196dp"
-            android:layout_height="260dp"
-            android:layout_marginTop="384dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
+            android:id="@+id/coursesListView"
+            android:layout_width="361dp"
+            android:layout_height="262dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="388dp"
+            android:background="@android:color/background_light"
+            android:scrollbars="horizontal|vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.244"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ListView
-            android:layout_width="189dp"
-            android:layout_height="247dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="384dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.004"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -234,5 +220,3 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.design.widget.CoordinatorLayout>
-
-</layout>

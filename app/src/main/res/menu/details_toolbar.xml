@@ -4,14 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_add"
-        android:icon="@drawable/ic_action_backbtn"
-        android:orderInCategory="100"
-        android:title="@string/saveToolbar"
-        app:showAsAction="ifRoom"
-        app:theme="@style/ThemeOverlay.AppCompat" />
-    <item
+      <item
         android:id="@+id/share_via_sms"
         android:icon="@drawable/ic_menu_sms"
         android:orderInCategory="100"

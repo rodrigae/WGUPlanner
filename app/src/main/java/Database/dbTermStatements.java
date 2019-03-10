@@ -2,13 +2,7 @@ package Database;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.Toast;
-
-import com.example.wguplanner.databinding.AppMainTermDetailBinding;
-
 import models.Term;
-import wguplanner_details.TermDetailsActivity;
-
 public class dbTermStatements {
     public static boolean SaveTermDetails(Object obj, SQLiteDatabase database) {
         //save term details data to the database
