@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainTerm"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,12 +19,6 @@
             android:background="@color/design_default_color_primary_dark"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <ListView
-            android:id="@+id/termListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white" />
-
     </android.support.design.widget.AppBarLayout>
 
 
@@ -35,5 +30,21 @@
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/design_default_color_primary_dark"
         app:srcCompat="@drawable/ic_menu_add" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/termListView"
+            android:layout_width="match_parent"
+            android:layout_height="732dp"
+            android:layout_marginTop="55dp"
+            android:background="@android:color/white"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>

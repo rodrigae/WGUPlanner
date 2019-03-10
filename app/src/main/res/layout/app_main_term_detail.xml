@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="Term" type="models.Term"/>
+    </data>
 
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout
     android:id="@+id/TermCourse"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,25 +29,9 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/termMentorList"
-            android:layout_width="188dp"
-            android:layout_height="270dp"
-            android:layout_marginStart="156dp"
-            android:layout_marginLeft="156dp"
-            android:layout_marginTop="384dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@android:color/background_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.967"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/reminderLabel2"
@@ -85,6 +74,7 @@
             android:gravity="top"
             android:hint="Notes"
             android:inputType="textMultiLine"
+            android:text="@{Term.notes}"
             android:singleLine="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -99,7 +89,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="252dp"
             android:background="@android:color/background_light"
-            android:text="Term Starts"
+            android:text="Start Date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -110,7 +100,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="228dp"
-
             android:text="Reminder"
             android:textColor="@android:color/background_dark"
             android:textSize="16sp"
@@ -125,7 +114,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="284dp"
             android:background="@android:color/background_light"
-            android:text="Term Ends"
+            android:text="End Date"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -141,25 +130,13 @@
             android:layout_marginRight="253dp"
             android:background="@android:color/background_light"
             android:ems="10"
+            android:text="@{Term.startDate}"
             android:inputType="date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/termTitlelabel5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="216dp"
-            android:layout_marginLeft="216dp"
-            android:layout_marginTop="164dp"
-            android:text="@string/EndDateLabel"
-            android:textColor="@android:color/background_dark"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
+       <TextView
             android:id="@+id/termTitlelabel4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -200,20 +177,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/TermIdView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="352dp"
-            android:layout_marginLeft="352dp"
-            android:layout_marginTop="61dp"
-            android:text="Termid"
-            android:textColor="@android:color/background_dark"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
+         <EditText
             android:id="@+id/EndDateEditText"
             style="@style/custom_date"
             android:layout_width="wrap_content"
@@ -226,26 +190,33 @@
             android:layout_marginRight="46dp"
             android:ems="10"
             android:inputType="date"
-            app:layout_constraintEnd_toEndOf="parent"
+
+             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/termAssessmentList"
+        <ListView
             android:layout_width="196dp"
-            android:layout_height="269dp"
-            android:layout_marginStart="3dp"
-            android:layout_marginLeft="3dp"
+            android:layout_height="260dp"
             android:layout_marginTop="384dp"
-            android:layout_marginEnd="212dp"
-            android:layout_marginRight="212dp"
-            android:background="@android:color/background_light"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ListView
+            android:layout_width="189dp"
+            android:layout_height="247dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="384dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.004"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -257,7 +228,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:backgroundTint="@color/design_default_color_primary_dark"
+        app:srcCompat="@android:drawable/ic_menu_save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_save" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.design.widget.CoordinatorLayout>
+
+</layout>
