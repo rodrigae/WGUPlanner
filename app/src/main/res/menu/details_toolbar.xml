@@ -4,6 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_menu_save"
+        android:orderInCategory="100"
+        android:title="@string/saveToolbar"
+        app:showAsAction="ifRoom" />
       <item
         android:id="@+id/share_via_sms"
         android:icon="@drawable/ic_menu_sms"

@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 import Database.dbSqlLiteManager;
+import Database.dbTerm;
 import Utilities.TermData;
 import models.Term;
 import wguplanner_details.CourseDetailsActivity;
@@ -25,6 +27,7 @@ public class TermActivity extends MainActivity {
 
 
     ArrayList<String> items = new ArrayList<>();
+
     ArrayAdapter<String> adapter;
 
     @Override
@@ -39,7 +42,25 @@ public class TermActivity extends MainActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(TermActivity.this, TermDetailsActivity.class));
+                Intent intent = new Intent(TermActivity.this, TermDetailsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //remove courses from the assignedList
+        final ListView terms = findViewById(R.id.termListView);
+        terms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    //Load the term into the TermDetailsActivity
+                    String termName = terms.getItemAtPosition(position).toString();
+                    Intent intent = new Intent(TermActivity.this, TermDetailsActivity.class);
+                    intent.putExtra("Term", termName);
+                    startActivity(intent);
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -60,12 +81,11 @@ public class TermActivity extends MainActivity {
 
             //get the database access
             database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            c = database.rawQuery("SELECT title,start_date,end_date,term_starts,term_ends,notes,assesssment_id,mentor_id FROM term ", null);
+            c = database.rawQuery("SELECT title,start_date,end_date,notes FROM term ", null);
             adapter = new ArrayAdapter<String>(TermActivity.this, android.R.layout.simple_list_item_1, items);
             if (c.moveToFirst()) {
                 do {
-                    termItem = new Term(c.getString(3), c.getString(4), c.getString(0), c.getString(1),
-                            c.getString(2), c.getString(5), c.getString(6), c.getString(7));
+                    termItem = new Term(c.getString(0), c.getString(1), c.getString(2), c.getString(3));
                     items.add(c.getString(0));// Add items to the adapter
                     data.put(c.getString(0),termItem);//add the list of items to the treemap for later retrival
                    } while (c.moveToNext());
@@ -75,6 +95,10 @@ public class TermActivity extends MainActivity {
             termListAdpt. setAdapter(adapter);
             database.close();
         }catch(Exception e){
+            if (e.getMessage().contains("no such table")){
+                database = new dbSqlLiteManager(this).getWritableDatabase();
+                database.execSQL(dbTerm.CREATE_TABLE);
+            }
             e.printStackTrace();
         }
     }

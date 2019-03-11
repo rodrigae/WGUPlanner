@@ -3,25 +3,17 @@ package models;
 import android.support.annotation.NonNull;
 
 
-public class Term {
-    @NonNull
+public class Term extends Course{
     private String title;
     private String startDate;
     private String endDate;
     private String notes;
-    private String reminderStartDate;
-    private String isReminderEndDate;
-    private String AssementId;
-    private String MentorId;
 
-    public Term(String rStartDate, String rEndDate, String title, String startDate, String endDate, String notes, String AssessmentId, String MentorId) {
-
-        this.title = title; this.AssementId = AssessmentId; this.MentorId = MentorId;
+    public Term(String title, String startDate, String endDate, String notes) {
+        this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.notes = notes;
-        this.reminderStartDate = rStartDate;
-        this.isReminderEndDate = rEndDate;
     }
 
     public String getNotes() {
@@ -56,35 +48,5 @@ public class Term {
         this.endDate = endDate;
     }
 
-    public String getReminderStartDate() {
-        return reminderStartDate;
-    }
 
-    public void setReminderStartDate(String reminderStartDate) {
-        this.reminderStartDate = reminderStartDate;
-    }
-
-    public String getIsReminderEndDate() {
-        return isReminderEndDate;
-    }
-
-    public void setIsReminderEndDate(String isReminderEndDate) {
-        this.isReminderEndDate = isReminderEndDate;
-    }
-
-    public String getAssementId() {
-        return AssementId;
-    }
-
-    public void setAssementId(String assementId) {
-        AssementId = assementId;
-    }
-
-    public String getMentorId() {
-        return MentorId;
-    }
-
-    public void setMentorId(String mentorId) {
-        MentorId = mentorId;
-    }
 }
