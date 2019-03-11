@@ -9,10 +9,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.TreeMap;
 
 import Database.dbCourse;
@@ -20,6 +22,8 @@ import Database.dbSqlLiteManager;
 import Utilities.CourseData;
 import models.Course;
 import wguplanner_details.CourseDetailsActivity;
+import wguplanner_details.TermDetailsActivity;
+
 public class CourseActivity extends MainActivity {
     ArrayList<String> items = new ArrayList<>();
     ArrayAdapter<String> adapter;
@@ -41,7 +45,23 @@ public class CourseActivity extends MainActivity {
                            }
         });
 
-        // drawer.setLayoutParams(null);
+        //edit the term
+        final ListView Course = findViewById(R.id.courseListView);
+        Course.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    //Load the course into CourseDetails
+                    String CourseName = Course.getItemAtPosition(position).toString();
+                    Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
+                    intent.putExtra("Assessment", CourseName);
+                    startActivity(intent);
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
         LoadCourseList();
     }
 
@@ -54,22 +74,9 @@ public class CourseActivity extends MainActivity {
             //get the list
             ListView CourseListAdpt = findViewById(R.id.courseListView);
             //set the adapter for list
-
-            //get the database access
-            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            c = database.rawQuery("SELECT title,start_date,end_date,course_starts,course_ends,notes,assesssment_id,mentor_id FROM course ", null);
-            adapter = new ArrayAdapter<String>(CourseActivity.this, android.R.layout.simple_list_item_1, items);
-            if (c.moveToFirst()) {
-                do {
-                    CourseItem = new Course(c.getString(3), c.getString(4), c.getString(0), c.getString(1),
-                            c.getString(2), c.getString(5), c.getString(6), c.getString(7));
-                    items.add(c.getString(0));// Add items to the adapter
-                    data.put(c.getString(0),CourseItem);//add the list of items to the treemap for later retrival
-                } while (c.moveToNext());
-
-            }
-            CourseData.setCourseList(data);
-            CourseListAdpt. setAdapter(adapter);
+            Collections.sort(CourseData.getCoursesbyNames());
+            adapter = new ArrayAdapter<String>(CourseActivity.this, android.R.layout.simple_list_item_1, CourseData.getCoursesbyNames());
+            CourseListAdpt.setAdapter(adapter);
             database.close();
         }catch(Exception e){
             if (e.getMessage().contains("no such table")){

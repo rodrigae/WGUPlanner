@@ -18,26 +18,36 @@ import com.example.wguplanner.R;
 import com.example.wguplanner.MainActivity;
 import com.example.wguplanner.TermActivity;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import Database.dbAssignedCourse;
 import Database.dbSqlLiteManager;
 import Database.dbStatements;
+import Utilities.CourseData;
 import Utilities.TermData;
 import models.Term;
 
 public class TermDetailsActivity extends MainActivity {
-
+    //items for reuse
     private Term term = null;
     private EditText edittext = null;
     private CheckBox chk = null;
     private String msg = null;
-    private ArrayList<String> assignedItem = new ArrayList<>();
-    private ArrayList<String> AvailableItems =new ArrayList<>();
-    private ArrayAdapter<String> adapter;
-    private ArrayAdapter<String> availableCourseadapter;
-    private View contentView = null;
     private String TermName = "";
+
+
+    private ArrayAdapter<String> listViewAdapter;
+    ListView CourseListAssigned = null;
+    ListView CourseListAvailable = null;
+
+    private static ArrayList<String> assignedCourseItem = new ArrayList<>();
+    private static ArrayList<String> AvailableCourseItems =null;
+
+    //view is used for snackbar notification
+    private View contentView = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +64,7 @@ public class TermDetailsActivity extends MainActivity {
         TermName = getIntent().getStringExtra("Term");
         if (TermName != null){
 
-            setTheFields();
+            setTheFieldsForEditing();
             LoadAssignedCourseList();
         }
 
@@ -76,7 +86,15 @@ public class TermDetailsActivity extends MainActivity {
             }
         });
 
+        Snackbar.make(contentView, "Select item from list to assign or un-assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 
+        //assign the items for later use
+        if (TermName == null){
+            AvailableCourseItems = CourseData.getCoursesbyNames();
+        }else {
+            assignedCourseItem = TermData.getAssignedCoursesByTerm(TermName);
+            AvailableCourseItems = TermData.getAvailableCoursesByTerm(TermName);
+        }
 
     }
 
@@ -109,10 +127,18 @@ public class TermDetailsActivity extends MainActivity {
 
                 //save the assigned course
                 database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
-                boolean saveAssignedCourse = dbStatements.SaveAssignedTermCourse(term, database, assignedItem);
+                boolean saveAssignedCourse = dbStatements.SaveAssignedTermCourse(term, database, assignedCourseItem);
 
                 if (saveTerm && saveAssignedCourse) {
+                    TermData.addCreatedTermList(term.getTitle(),term);//this is to update the term list for when term is opened, after refresh
+                    if (TermName == null){
+                        //tells the system is a new entry
+                        TermData.addNewAssignedCourses(term.getTitle(), assignedCourseItem);
+                    }
+                    LoadCreatedCourses();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
+                    LoadTermList();
                     startActivity(new Intent(TermDetailsActivity.this, TermActivity.class));
+
                 } else {
                     Snackbar.make(contentView, "Term Saved: " + saveTerm + " Courses Saved: " + saveAssignedCourse, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
@@ -130,12 +156,15 @@ public class TermDetailsActivity extends MainActivity {
             boolean update = TermName != null; //is this an update or not, we do this by checking if a Term Name was passed to this Activity
             //for updates
             if (update){
-                if (assignedItem.isEmpty()) {
+                if (assignedCourseItem.isEmpty()) {
                     //delete the term from term table and assignedcourse
                     dbStatements.deleteTerm(TermName, database);
                     database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                     dbStatements.deleteAssignedCourses(TermName, database);
+                    LoadCreatedCourses();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
+                    LoadTermList();
                     startActivity(new Intent(TermDetailsActivity.this, TermActivity.class));
+
                 }else{
                     Snackbar.make(contentView, "Please remove all assigned courses before deleting this term.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
@@ -146,63 +175,51 @@ public class TermDetailsActivity extends MainActivity {
         return true;
     }
 
+    //load the customer bar for use
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.details_toolbar, menu);
-        return true;
-    }
+    public boolean onCreateOptionsMenu(Menu menu) {getMenuInflater().inflate(R.menu.details_toolbar, menu);return true;}
 
+    //validates user entries
     private boolean validateEntry() {
         //make sure these fields are not empty before proceeding
         if (term.getTitle().isEmpty()){
             msg = "Title is empty";
-            setFocusOnField("termTitle");
+           // setFocusOnField("termTitle");
+            edittext = findViewById(R.id.TermTitleEditText); edittext.requestFocus();
             return false;
-        }else if (TermData.getTermList().containsKey(term.getTitle()) && TermName == null){
+        }else if (TermData.getCreatedTermList().containsKey(term.getTitle()) && TermName == null){
             msg = term.getTitle() + " already exists. ";
-            setFocusOnField("termTitle");
+            //setFocusOnField("termTitle");
+            edittext = findViewById(R.id.TermTitleEditText); edittext.requestFocus();
             return false;
         }else if (term.getStartDate().isEmpty()){
             msg = "Start date is empty";
-            setFocusOnField("startdate");
+            //setFocusOnField("startdate");
+            edittext = findViewById(R.id.TermStartDateEditText); edittext.requestFocus();
             return false;
         }else if (term.getEndDate().isEmpty()){
             msg = "End date is empty";
-            setFocusOnField("enddate");
+            //setFocusOnField("enddate");
+            edittext = findViewById(R.id.TermEndDateEditText); edittext.requestFocus();
             return false;
         }else if (term.getStartDate().length() != 10){
             msg = "wrong format date, please use mm/dd/yyyy";
-            setFocusOnField("startdate");
+            //setFocusOnField("startdate");
+            edittext = findViewById(R.id.TermStartDateEditText);  edittext.requestFocus();
             return false;
         }else if (term.getEndDate().length() != 10){
             msg = "wrong format date, please use mm/dd/yyyy";
-            setFocusOnField("enddate");
+            //setFocusOnField("enddate");
+            edittext = findViewById(R.id.TermEndDateEditText); edittext.requestFocus();
             return false;
         }
         return true;
 
     }
-    private void setFocusOnField(String field){
-        switch (field) {
-            case "termTitle":
-                edittext = findViewById(R.id.TermTitleEditText);
-                edittext.requestFocus();
-                break;
-            case "startdate":
-                edittext = findViewById(R.id.TermStartDateEditText);
-                edittext.requestFocus();
-                break;
-            case "enddate":
-                edittext = findViewById(R.id.TermEndDateEditText);
-                edittext.requestFocus();
-                break;
 
-        }
-    }
-
-    private void setTheFields(){
+    private void setTheFieldsForEditing(){
         try {   //set the fields for edit.
-                Term data = TermData.getTermList().get(TermName);
+                Term data = TermData.getCreatedTermList().get(TermName);
                 //set the title
                 edittext = findViewById(R.id.TermTitleEditText);
                 edittext.setText(data.getTitle());
@@ -243,82 +260,68 @@ public class TermDetailsActivity extends MainActivity {
         }
         return results;
     }
+
     private void LoadAvailableCourseList(){
-        //load the Course list
-        Cursor c = null;
-        try {
+         try {
             //get the list
             ListView CourseListAdpt = findViewById(R.id.TermavailableCourseList);
             //set the adapter for list
-            AvailableItems = new ArrayList<>();
-            // get the database access
-            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            c = database.rawQuery("SELECT title FROM course ", null);
-            adapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, AvailableItems);
-            if (c.moveToFirst()) {
-                do {
-                    if (!assignedItem.contains(c.getString(0))) {
-                        AvailableItems.add(c.getString(0));// Add items to the adapter
-                    }
-                } while (c.moveToNext());
 
-            }
+             ArrayList<String> list = new ArrayList<>();
+             //determines if its a new entry here
+             if (TermName == null){
+                 list = CourseData.getCoursesbyNames();
+             }else{
+                 list = TermData.getAvailableCoursesByTerm(TermName);
+             }
 
-            CourseListAdpt.setAdapter(adapter);
-            database.close();
+             if (list != null){
+                 Collections.sort(list);
+             }
+
+            listViewAdapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, list);
+            CourseListAdpt.setAdapter(listViewAdapter);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+
     private void LoadAssignedCourseList(){
         //load the Course list assigned
-        Cursor c = null;
+
         try {
             //get the list
             ListView CourseListAdpt = findViewById(R.id.TermassignedCourseList);
             //set the adapter for list
-            // get the database access
-            assignedItem = new ArrayList<>();
-            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            c = database.rawQuery("SELECT course FROM assignedcourse WHERE title = '" + TermName+"'", null);
-            adapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, assignedItem);
-            if (c.moveToFirst()) {
-                do {
+               listViewAdapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, TermData.getAssignedCoursesByTerm(TermName));
+               CourseListAdpt.setAdapter(listViewAdapter);
 
-
-                    assignedItem.add(c.getString(0));// Add items to the adapter
-                } while (c.moveToNext());
-
-            }
-            CourseListAdpt. setAdapter(adapter);
-            database.close();
         }catch(Exception e){
-            if (e.getMessage().contains("no such table")){
-                database = new dbSqlLiteManager(this).getWritableDatabase();
-                database.execSQL(dbAssignedCourse.CREATE_TABLE);
-            }
             e.printStackTrace();
         }
     }
     private void AssignCourseToTerm(View view, int position){
     //add and remove items from assign and available list of courses
-    ListView CourseListAssigned = findViewById(R.id.TermassignedCourseList);
-    ListView CourseListAvailable = findViewById(R.id.TermavailableCourseList);
+     CourseListAssigned = findViewById(R.id.TermassignedCourseList);
+     CourseListAvailable = findViewById(R.id.TermavailableCourseList);
+
     try {
         if (position > -1) {
             String CourseName = CourseListAvailable.getItemAtPosition(position).toString();
-            if (!CourseName.isEmpty() && !assignedItem.contains(CourseName)) {
+              if (!CourseName.isEmpty() && !assignedCourseItem.contains(CourseName)) {
                 //assign the course name to the list
-                adapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, assignedItem);
-                assignedItem.add(CourseName);
-                AvailableItems.remove(CourseName);//remove from the available list
-                CourseListAssigned.setAdapter(adapter);
+                listViewAdapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, assignedCourseItem);
+                assignedCourseItem.add(CourseName);
+                AvailableCourseItems.remove(CourseName);//remove from the available list
+                CourseListAssigned.setAdapter(listViewAdapter);
+               // TermData.setAssignedCourseItem(assignedCourseItem);//save to the container which will be used for saving later
 
                 //remove the assigned course from the available list
-                adapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, AvailableItems);
-                CourseListAvailable.setAdapter(adapter);
+                listViewAdapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, AvailableCourseItems);
+                CourseListAvailable.setAdapter(listViewAdapter);
+                Snackbar.make(contentView, CourseName + " Assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
             }
-            Snackbar.make(contentView, CourseName + " Assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
     }catch(Exception e){
         e.printStackTrace();
@@ -326,29 +329,31 @@ public class TermDetailsActivity extends MainActivity {
 }
     private void RemoveAssignedCourse(View view, int position){
         //add and remove items from assign and available list of courses
-        ListView CourseListAssigned = findViewById(R.id.TermassignedCourseList);
-        ListView CourseListAvailable = findViewById(R.id.TermavailableCourseList);
+        CourseListAssigned = findViewById(R.id.TermassignedCourseList);
+        CourseListAvailable = findViewById(R.id.TermavailableCourseList);
+
         try {
             if (position > -1) {
                 String CourseName = CourseListAssigned.getItemAtPosition(position).toString();
-                if (!CourseName.isEmpty() && !AvailableItems.contains(CourseName)) {
+                 if (!CourseName.isEmpty()) {
                     //remove the assigned course from the available list
-                    adapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1,   AvailableItems);
-                    AvailableItems.add(CourseName);
-                    assignedItem.remove(CourseName);  //remove from the available list
-                    CourseListAvailable.setAdapter(adapter);
+                    listViewAdapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, AvailableCourseItems);
+                    if (!AvailableCourseItems.contains(CourseName)){AvailableCourseItems.add(CourseName);}
+                    assignedCourseItem.remove(CourseName);  //remove from the available list
+                    CourseListAvailable.setAdapter(listViewAdapter);
+                    //TermData.setAssignedCourseItem(assignedCourseItem);//save to the container which will be used for saving later
 
                     //assign course name back to the available list
-                    adapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, assignedItem);
-                    CourseListAssigned.setAdapter(adapter);
-
-
+                    listViewAdapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, assignedCourseItem);
+                    CourseListAssigned.setAdapter(listViewAdapter);
+                    Snackbar.make(contentView, CourseName + " Removed", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
-                Snackbar.make(contentView, CourseName + " Removed", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+
+
 
 }
