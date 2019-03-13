@@ -17,12 +17,21 @@ public class dbSqlLiteManager extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(dbTerm.CREATE_TABLE);
         db.execSQL(dbCourse.CREATE_TABLE);
+        db.execSQL(dbAssesssment.CREATE_TABLE);
+        db.execSQL(dbAssignedCourse.CREATE_TABLE);
+        db.execSQL(dbMentor.CREATE_TABLE);
+        db.execSQL(dbAssignedAssessment.CREATE_TABLE);
+        db.execSQL(dbAssignedMentor.CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     db.execSQL("DROP TABLE IF EXISTS " + dbTerm.TABLE_NAME);
-    db.execSQL("DROP TABLE IF EXISTS " + dbCourse.TABLE_NAME);
+    db.execSQL("DROP TABLE IF EXISTS " + dbAssesssment.TABLE_NAME);
+    db.execSQL("DROP TABLE IF EXISTS " + dbAssignedCourse.TABLE_NAME);
+    db.execSQL("DROP TABLE IF EXISTS " + dbMentor.TABLE_NAME);
+    db.execSQL("DROP TABLE IF EXISTS " + dbAssignedAssessment.TABLE_NAME);
+    db.execSQL("DROP TABLE IF EXISTS " + dbAssignedMentor.TABLE_NAME);
     onCreate(db);
     }
 }

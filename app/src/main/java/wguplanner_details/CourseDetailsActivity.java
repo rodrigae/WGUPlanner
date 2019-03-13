@@ -77,12 +77,11 @@ public class CourseDetailsActivity extends MainActivity {
         }else{
             //clear the list for new entries.
             assignedAssessmentItem.clear();
-            assignedMentorItem.clear();;
+            assignedMentorItem.clear();
         }
 
         LoadAvailableAssessmentList();
         LoadAvailableMentorList();
-        LoadAssignedAssessmentList();
         LoadAssignedMentorList();
 
         //move assessment to the assigned list
@@ -168,25 +167,24 @@ public class CourseDetailsActivity extends MainActivity {
                         database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                         boolean saveCourse = dbStatements.SaveCourseDetails(Course, database);
 
-                        //save the assigned course
-                        database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
-                        boolean saveAssignedAssessment = dbStatements.SaveAssignedCourseAssessment(Course, database, assignedAssessmentItem);
 
-                        //save the assigned mentor
+                            //save the assigned course
+                            database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
+                        boolean  saveAssignedAssessment = dbStatements.SaveAssignedCourseAssessment(Course, database, assignedAssessmentItem);
+
+                            //save the assigned mentor
                         database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
-                        boolean saveAssignedMentor = dbStatements.SaveAssignedCourseMentor(Course, database, assignedMentorItem);
+                         boolean saveAssignedMentor = dbStatements.SaveAssignedCourseMentor(Course, database, assignedMentorItem);
 
 
                         if (saveCourse && saveAssignedAssessment && saveAssignedMentor) {
-                            CourseData.AddNewCreatedCourse(Course.getTitle(),Course);//this is to update the term list for when term is opened, after refresh
+                          //  CourseData.AddNewCreatedCourse(Course.getTitle(),Course);//this is to update the term list for when term is opened, after refresh
                             if (CourseName == null){
                                 //tells the system is a new entry
-                                CourseData.addNewAssignedAssessment(Course.getTitle(), assignedAssessmentItem);
-                                CourseData.addNewAssignedMentor(Course.getTitle(), assignedMentorItem);
+                               // CourseData.addNewAssignedAssessment(Course.getTitle(), assignedAssessmentItem);
+                                // CourseData.addNewAssignedMentor(Course.getTitle(), assignedMentorItem);
                             }
-                            LoadCourseList();
-                            LoadAssessmentList();
-                            LoadCreatedMentor();
+                            ReloadData();
 
                             startActivity(new Intent(CourseDetailsActivity.this, CourseActivity.class));
                         } else {
@@ -413,6 +411,7 @@ public class CourseDetailsActivity extends MainActivity {
             //get the list
             ListView AssessmentListAdpt = findViewById(R.id.CourseAssignedAssessmentList);
             //set the adapter for list
+
             listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,CourseData.getAssignedAssessmentByTerm(CourseName));
             AssessmentListAdpt. setAdapter(listViewAdapter);
 

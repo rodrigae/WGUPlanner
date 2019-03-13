@@ -24,6 +24,17 @@ public class AssessmentData {
         return Assessments;
     }
 
+    public static ArrayList<String> getWhereUsedAssessment(String AssessmentName){
+        ArrayList<String> listOfUsedLocation = new ArrayList<>();
+        for (String Course : CourseData.getAssignedAssessment().keySet()){
+            ArrayList<String> contains = CourseData.getAssignedAssessment().get(Course);
+            if (contains.contains(AssessmentName)){
+                listOfUsedLocation.add(Course);
+            }
+        }
+        return listOfUsedLocation;
+    }
+
     public static TreeMap<String, ArrayList<String>> getAssessmentWhereUsed() {
         return AssessmentWhereUsed;
     }

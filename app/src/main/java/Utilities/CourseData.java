@@ -51,6 +51,8 @@ public class CourseData {
         AssignedAssessment = assignedAssessment;
     }
 
+
+
     public static void addNewAssignedAssessment(String CourseName, ArrayList<String> assessment){
         AssignedAssessment.put(CourseName, assessment);
     }

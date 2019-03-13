@@ -100,14 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //used for termActivity, TermDetails
-        LoadTermList();
-        LoadCourseList();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
-        //AddAssignedCourseListToTermData();//load list of assigned course for later use
-        LoadAssessmentList();//Load List of assessment
-        LoadAssignedCourseList();// Load assign courses per term
-        LoadAssignedAssessmentList();
-        LoadWhereUsedAssessmentList();
-        LoadAssignedMentorList();
+      ReloadData();
 
         if (id == R.id.nav_term) {
             Intent course = new Intent(this, TermActivity.class);
@@ -138,6 +131,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    protected void ReloadData(){
+        LoadTermList();
+        LoadCourseList();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
+        LoadAssessmentList();//Load List of assessment
+        LoadAssignedCourseList();// Load assign courses per term
+        LoadAssignedAssessmentList();
+        LoadAssignedMentorList();
+    }
     protected void LoadTermList(){
         //load the term list
         Cursor c = null;
@@ -334,6 +335,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }
                 AssignedAssessment.put(CourseName, assignedAssessmentItem);
+                assignedAssessmentItem = new ArrayList<>();//assign a new object after adding to it.
             }
             CourseData.setAssignedAssessment(AssignedAssessment);
             database.close();
@@ -346,36 +348,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void LoadWhereUsedAssessmentList(){
-        //load the Course list assigned
-        Cursor c = null;
-        try {
-            TreeMap<String, ArrayList<String>> WhereUsedAssessment = new TreeMap<>();
-
-            //get the list
-            // get the database access
-            ArrayList<String> WhereUsedAssessmentItem = new ArrayList<>();
-            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            for (String AssessmentName : AssessmentData.getCreatedAssessment().keySet()) {
-                c = database.rawQuery("SELECT " + dbAssignedAssessment.COLUMN_COURSENAME + " FROM " + dbAssignedAssessment.TABLE_NAME + " WHERE " + dbAssignedAssessment.COLUMN_ASSESSMENTNAME + " = '" + AssessmentName + "'", null);
-                if (c.moveToFirst()) {
-                    do {
-                        WhereUsedAssessmentItem.add(c.getString(0));// Add items to the adapter
-                    } while (c.moveToNext());
-
-                }
-                WhereUsedAssessment.put(AssessmentName, WhereUsedAssessmentItem);
-            }
-            AssessmentData.setAssessmentWhereUsed(WhereUsedAssessment);
-            database.close();
-        }catch(Exception e){
-            if (e.getMessage().contains("no such table")){
-                database = new dbSqlLiteManager(this).getWritableDatabase();
-                database.execSQL(dbAssignedAssessment.CREATE_TABLE);
-            }
-            e.printStackTrace();
-        }
-    }
 
     private void LoadAssignedMentorList(){
         //load the Course list assigned

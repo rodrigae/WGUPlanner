@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,9 +18,7 @@ import com.example.wguplanner.AssessmentActivity;
 import com.example.wguplanner.R;
 import com.example.wguplanner.MainActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import Database.dbSqlLiteManager;
 import Database.dbStatements;
@@ -81,7 +78,7 @@ public class AssessmentDetailsActivity extends MainActivity {
                              }
                          }
         );
-        LoadAvailableCoursesList();
+        LoadWhereUsedCoursesList();
 
     }
 
@@ -137,8 +134,8 @@ public class AssessmentDetailsActivity extends MainActivity {
             //for updates
             if (update) {
                 //check to see if the course is being use in a term before deleting
-                 ArrayList<String> whereUsed = AssessmentData.getAssessmentWhereUsed().get(assessmentName);
-              if ( whereUsed.isEmpty()) {
+                 ArrayList<String> whereUsed = AssessmentData.getWhereUsedAssessment(assessmentName);
+              if (whereUsed == null) {
                         //delete the Course from Course table and assignedcourse
                     dbStatements.deleteAssessment(assessmentName, database);
                     database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
@@ -158,12 +155,12 @@ public class AssessmentDetailsActivity extends MainActivity {
         return true;
     }
 
-    private void LoadAvailableCoursesList(){
+    private void LoadWhereUsedCoursesList(){
         //load the Course list, to asign to assessment
         try {
             //get the list
             ListView CourseLists = findViewById(R.id.AssessmentWhereUsedList);
-            ArrayAdapter<String>  listViewAdapter = new ArrayAdapter<String>(AssessmentDetailsActivity.this, android.R.layout.simple_list_item_1,AssessmentData.getAssessmentWhereUsed().get(assessmentName));
+            ArrayAdapter<String>  listViewAdapter = new ArrayAdapter<String>(AssessmentDetailsActivity.this, android.R.layout.simple_list_item_1, AssessmentData.getWhereUsedAssessment(assessmentName));
             CourseLists.setAdapter(listViewAdapter);
         }catch(Exception e){
             e.printStackTrace();
