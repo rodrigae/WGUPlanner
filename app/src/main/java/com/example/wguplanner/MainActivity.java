@@ -13,22 +13,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
 
 import Database.dbAssesssment;
+import Database.dbAssignedAssessment;
 import Database.dbAssignedCourse;
+import Database.dbAssignedMentor;
 import Database.dbCourse;
+import Database.dbMentor;
 import Database.dbSqlLiteManager;
 import Database.dbTerm;
+import Utilities.AssessmentData;
 import Utilities.CourseData;
+import Utilities.MentorData;
 import Utilities.TermData;
+import models.Assessment;
 import models.Course;
+import models.Mentor;
 import models.Term;
-import wguplanner_details.TermDetailsActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
   protected  DrawerLayout drawer = null;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -96,10 +101,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //used for termActivity, TermDetails
         LoadTermList();
-        LoadCreatedCourses();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
-        AddAssignedCourseListToTermData();//load list of assigned course for later use
-        LoadAvailableAssessmentList();//Load List of assessment
+        LoadCourseList();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
+        //AddAssignedCourseListToTermData();//load list of assigned course for later use
+        LoadAssessmentList();//Load List of assessment
         LoadAssignedCourseList();// Load assign courses per term
+        LoadAssignedAssessmentList();
+        LoadWhereUsedAssessmentList();
+        LoadAssignedMentorList();
 
         if (id == R.id.nav_term) {
             Intent course = new Intent(this, TermActivity.class);
@@ -159,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
     }
-
+/*
     private void AddAssignedCourseListToTermData(){
         //load the Course list assigned and added to TermData for use
         Cursor c = null;
@@ -191,35 +199,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
     }
+    */
 
-    private void LoadAvailableAssessmentList(){
-        //load the Course list
-        Cursor c = null;
-        try {
-            //get the list
-            ListView AssessmentListAdpt = findViewById(R.id.CourseAvailableAssessmentList);
-            //set the adapter for list
-            ArrayList<String>  AvailableAssessmentItems = new ArrayList<>();
-            // get the database access
-            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            c = database.rawQuery("SELECT "+ dbAssesssment.COLUMN_ASSESSMENTNAME+" FROM "+ dbAssesssment.TABLE_NAME, null);
-            if (c.moveToFirst()) {
-                do {
-                    if (!CourseData.getAssignedAssessmentItem().contains(c.getString(0))) {
-                        AvailableAssessmentItems.add(c.getString(0));// Add items to the adapter
-                    }
-                } while (c.moveToNext());
-            }
-            CourseData.setAssignedAssessmentItem(AvailableAssessmentItems);
-            database.close();
-        }catch(Exception e){
-            if (e.getMessage().contains("no such table")){
-                database = new dbSqlLiteManager(this).getWritableDatabase();
-                database.execSQL(dbAssesssment.CREATE_TABLE);
-            }
-            e.printStackTrace();
-        }
-    }
 
     private void LoadAssignedCourseList(){
         //load the Course list assigned
@@ -253,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    protected void LoadCreatedCourses(){
+    protected void LoadCourseList(){
         //load the term list
         Cursor c = null;
         TreeMap<String, Course> data = new TreeMap<>();
@@ -274,7 +255,154 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }catch(Exception e){
             if (e.getMessage().contains("no such table")){
                 database = new dbSqlLiteManager(this).getWritableDatabase();
-                database.execSQL(dbTerm.CREATE_TABLE);
+                database.execSQL(dbCourse.CREATE_TABLE);
+            }
+            e.printStackTrace();
+        }
+    }
+
+
+    protected void LoadAssessmentList(){
+        //load the term list
+        Cursor c = null;
+        TreeMap<String, Assessment> data = new TreeMap<>();
+         try {
+            Assessment assessmentItem = null;
+            //get the list
+            //get the database access
+            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
+            c = database.rawQuery("SELECT " + dbAssesssment.COLUMN_ASSESSMENTNAME+","+ dbAssesssment.COLUMN_TYPE+","+ dbAssesssment.COLUMN_STATUS+","+dbAssesssment.COLUMN_DUEDATE+","+dbAssesssment.COLUMN_REMINDER+" FROM "+ dbAssesssment.TABLE_NAME, null);
+            if (c.moveToFirst()) {
+                do {
+                    assessmentItem = new Assessment(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4));//add the list of items to the treemap for later retrival
+                    data.put(c.getString(0), assessmentItem);
+                } while (c.moveToNext());
+            }
+            AssessmentData.setCreatedAssessment(data);
+            database.close();
+        }catch(Exception e){
+            if (e.getMessage().contains("no such table")){
+                database = new dbSqlLiteManager(this).getWritableDatabase();
+                database.execSQL(dbAssesssment.CREATE_TABLE);
+            }
+            e.printStackTrace();
+        }
+    }
+
+    protected void LoadCreatedMentor(){
+        //load the term list
+        Cursor c = null;
+        TreeMap<String, Mentor> data = new TreeMap<>();
+        try {
+            Mentor mentorItem = null;
+            //get the list
+            //get the database access
+            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
+            c = database.rawQuery("SELECT " + dbMentor.COLUMN_MMENTORNAME+","+ dbMentor.COLUMN_MENTOREMAIL+","+ dbMentor.COLUMN_PHONE+" FROM "+ dbMentor.TABLE_NAME, null);
+            if (c.moveToFirst()) {
+                do {
+                    mentorItem = new Mentor(c.getString(0), c.getString(1), c.getString(2));
+                } while (c.moveToNext());
+            }
+            MentorData.setCreatedMentor(data);
+            database.close();
+        }catch(Exception e){
+            if (e.getMessage().contains("no such table")){
+                database = new dbSqlLiteManager(this).getWritableDatabase();
+                database.execSQL(dbMentor.CREATE_TABLE);
+            }
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadAssignedAssessmentList(){
+        //load the Course list assigned
+        Cursor c = null;
+        try {
+            TreeMap<String, ArrayList<String>> AssignedAssessment = new TreeMap<>();
+
+            //get the list
+            // get the database access
+            ArrayList<String> assignedAssessmentItem = new ArrayList<>();
+            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
+            for (String CourseName : CourseData.getCreatedCourse().keySet()) {
+                c = database.rawQuery("SELECT " + dbAssignedAssessment.COLUMN_ASSESSMENTNAME + " FROM " + dbAssignedAssessment.TABLE_NAME + " WHERE " + dbAssignedAssessment.COLUMN_COURSENAME + " = '" + CourseName + "'", null);
+                if (c.moveToFirst()) {
+                    do {
+                        assignedAssessmentItem.add(c.getString(0));// Add items to the adapter
+                    } while (c.moveToNext());
+
+                }
+                AssignedAssessment.put(CourseName, assignedAssessmentItem);
+            }
+            CourseData.setAssignedAssessment(AssignedAssessment);
+            database.close();
+        }catch(Exception e){
+            if (e.getMessage().contains("no such table")){
+                database = new dbSqlLiteManager(this).getWritableDatabase();
+                database.execSQL(dbAssignedAssessment.CREATE_TABLE);
+            }
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadWhereUsedAssessmentList(){
+        //load the Course list assigned
+        Cursor c = null;
+        try {
+            TreeMap<String, ArrayList<String>> WhereUsedAssessment = new TreeMap<>();
+
+            //get the list
+            // get the database access
+            ArrayList<String> WhereUsedAssessmentItem = new ArrayList<>();
+            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
+            for (String AssessmentName : AssessmentData.getCreatedAssessment().keySet()) {
+                c = database.rawQuery("SELECT " + dbAssignedAssessment.COLUMN_COURSENAME + " FROM " + dbAssignedAssessment.TABLE_NAME + " WHERE " + dbAssignedAssessment.COLUMN_ASSESSMENTNAME + " = '" + AssessmentName + "'", null);
+                if (c.moveToFirst()) {
+                    do {
+                        WhereUsedAssessmentItem.add(c.getString(0));// Add items to the adapter
+                    } while (c.moveToNext());
+
+                }
+                WhereUsedAssessment.put(AssessmentName, WhereUsedAssessmentItem);
+            }
+            AssessmentData.setAssessmentWhereUsed(WhereUsedAssessment);
+            database.close();
+        }catch(Exception e){
+            if (e.getMessage().contains("no such table")){
+                database = new dbSqlLiteManager(this).getWritableDatabase();
+                database.execSQL(dbAssignedAssessment.CREATE_TABLE);
+            }
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadAssignedMentorList(){
+        //load the Course list assigned
+        Cursor c = null;
+        try {
+            TreeMap<String, ArrayList<String>> AssignedMentor = new TreeMap<>();
+
+            //get the list
+            // get the database access
+            ArrayList<String> assignedMentorItem = new ArrayList<>();
+            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
+            for (String CourseName : CourseData.getCreatedCourse().keySet()) {
+                c = database.rawQuery("SELECT " + dbAssignedMentor.COLUMN_MENTORNAME + " FROM " + dbAssignedMentor.TABLE_NAME + " WHERE " + dbAssignedMentor.COLUMN_COURSENAME + " = '" + CourseName + "'", null);
+                if (c.moveToFirst()) {
+                    do {
+                        assignedMentorItem.add(c.getString(0));// Add items to the adapter
+                    } while (c.moveToNext());
+
+                }
+                AssignedMentor.put(CourseName, assignedMentorItem);
+            }
+            CourseData.setAssignedMentor(AssignedMentor);
+            database.close();
+        }catch(Exception e){
+            if (e.getMessage().contains("no such table")){
+                database = new dbSqlLiteManager(this).getWritableDatabase();
+                database.execSQL(dbAssignedMentor.CREATE_TABLE);
             }
             e.printStackTrace();
         }

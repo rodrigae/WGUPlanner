@@ -18,20 +18,17 @@ import android.widget.ListView;
 import com.example.wguplanner.CourseActivity;
 import com.example.wguplanner.MainActivity;
 import com.example.wguplanner.R;
-import com.example.wguplanner.CourseActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import Database.dbAssignedAssessment;
-import Database.dbAssignedCourse;
 import Database.dbSqlLiteManager;
 import Database.dbStatements;
+import Utilities.AssessmentData;
 import Utilities.CourseData;
+import Utilities.MentorData;
 import Utilities.TermData;
-import models.Course;
-import Database.dbAssesssment;
 import models.Course;
 
 public class CourseDetailsActivity extends MainActivity {
@@ -46,9 +43,13 @@ public class CourseDetailsActivity extends MainActivity {
     private ArrayAdapter<String> listViewAdapter;
     ListView AssessmentListAssigned = null;
     ListView AssessmentListAvailable = null;
+    ListView MentorListAssigned = null;
+    ListView MentorListAvailable = null;
 
-    private static ArrayList<String> assignedAssessmentItem =null;
+    private static ArrayList<String> assignedAssessmentItem = new ArrayList<>();
     private static ArrayList<String> AvailableAssessmentItems = null;
+    private static ArrayList<String> assignedMentorItem = new ArrayList<>();
+    private static ArrayList<String> AvailableMentorItems = null;
 
 
     //view is used for snackbar notification
@@ -70,14 +71,21 @@ public class CourseDetailsActivity extends MainActivity {
         //load the data if the user is attempting to edit an item.
         CourseName = getIntent().getStringExtra("Assessment");
         if (CourseName != null){
-
             setTheFieldsForEditing();
             LoadAssignedAssessmentList();
+            LoadAssignedMentorList();
+        }else{
+            //clear the list for new entries.
+            assignedAssessmentItem.clear();
+            assignedMentorItem.clear();;
         }
 
         LoadAvailableAssessmentList();
+        LoadAvailableMentorList();
+        LoadAssignedAssessmentList();
+        LoadAssignedMentorList();
 
-        //move courses to the assigned list
+        //move assessment to the assigned list
         final ListView AssessmentListAvailable = findViewById(R.id.CourseAvailableAssessmentList);
         AssessmentListAvailable.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -85,7 +93,7 @@ public class CourseDetailsActivity extends MainActivity {
             }
         });
 
-        //remove courses from the assignedList
+        //remove assessment from the assignedList
         final ListView AssessmentListAssigned = findViewById(R.id.CourseAssignedAssessmentList);
         AssessmentListAssigned.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -93,7 +101,35 @@ public class CourseDetailsActivity extends MainActivity {
             }
         });
 
+        //move mentors to the assigned list
+        final ListView MentorListAvailable = findViewById(R.id.CourseAvailableMentorsList);
+        MentorListAvailable.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AssignMentorToCourse(view, position);
+            }
+        });
+
+        //remove mentors from the assignedList
+        final ListView MentorListAssigned = findViewById(R.id.CourseAssignedMentorsList);
+        MentorListAssigned.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                RemoveAssignedMentor(view, position);
+            }
+        });
+
+
         Snackbar.make(contentView, "Select item from list to assign or un-assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+        //assign the items for later use
+        if (CourseName == null){
+            AvailableAssessmentItems = AssessmentData.getAssessmentsbyNames();
+            AvailableMentorItems = MentorData.getMentorsbyNames();
+        }else {
+            assignedAssessmentItem = CourseData.getAssignedAssessmentByTerm(CourseName);
+            AvailableAssessmentItems = CourseData.getAvailableAssessmentByTerm(CourseName);
+            assignedMentorItem = CourseData.getAssignedMentorByTerm(CourseName);
+            AvailableMentorItems =  CourseData.getAvailableMentorByTerm(CourseName);
+        }
 
     }
 
@@ -124,6 +160,8 @@ public class CourseDetailsActivity extends MainActivity {
                             dbStatements.deleteCourse(CourseName, database);
                             database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                             dbStatements.deleteAssignedAssessment(CourseName, database);
+                            database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
+                            dbStatements.deleteAssignedMentors(CourseName, database);
                         }
 
                         //save the Course data
@@ -134,11 +172,25 @@ public class CourseDetailsActivity extends MainActivity {
                         database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                         boolean saveAssignedAssessment = dbStatements.SaveAssignedCourseAssessment(Course, database, assignedAssessmentItem);
 
+                        //save the assigned mentor
+                        database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
+                        boolean saveAssignedMentor = dbStatements.SaveAssignedCourseMentor(Course, database, assignedMentorItem);
 
-                        if (saveCourse && saveAssignedAssessment) {
+
+                        if (saveCourse && saveAssignedAssessment && saveAssignedMentor) {
+                            CourseData.AddNewCreatedCourse(Course.getTitle(),Course);//this is to update the term list for when term is opened, after refresh
+                            if (CourseName == null){
+                                //tells the system is a new entry
+                                CourseData.addNewAssignedAssessment(Course.getTitle(), assignedAssessmentItem);
+                                CourseData.addNewAssignedMentor(Course.getTitle(), assignedMentorItem);
+                            }
+                            LoadCourseList();
+                            LoadAssessmentList();
+                            LoadCreatedMentor();
+
                             startActivity(new Intent(CourseDetailsActivity.this, CourseActivity.class));
                         } else {
-                            Snackbar.make(contentView, "Course Saved: " + saveCourse + " Assessment Saved: " + saveAssignedAssessment, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                            Snackbar.make(contentView, "Course Saved: " + saveCourse + " Assessment Saved: " + saveAssignedAssessment + " Mentor Saved: " + saveAssignedMentor, Snackbar.LENGTH_LONG).setAction("Action", null).show();
                         }
                     }else{
                         Snackbar.make(contentView, msg, Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -163,11 +215,17 @@ public class CourseDetailsActivity extends MainActivity {
                 }
 
                 if (termsList.isEmpty()) {
-                    if (assignedAssessmentItem.isEmpty()) {
+                    if (assignedAssessmentItem.isEmpty() && assignedMentorItem.isEmpty()) {
                         //delete the Course from Course table and assignedcourse
                         dbStatements.deleteCourse(CourseName, database);
                         database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                         dbStatements.deleteAssignedAssessment(CourseName, database);
+                        database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
+                        dbStatements.deleteAssignedMentors(CourseName, database);
+                        LoadCourseList();
+                        LoadAssessmentList();
+                        LoadCreatedMentor();
+
                         startActivity(new Intent(CourseDetailsActivity.this, CourseActivity.class));
                     } else {
                         Snackbar.make(contentView, "Please remove all assigned assessment before deleting this Course.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -184,8 +242,6 @@ public class CourseDetailsActivity extends MainActivity {
         }
             return true;
         }
-
-
 
     //validates user entries
     private boolean validateEntry() {
@@ -306,10 +362,45 @@ public class CourseDetailsActivity extends MainActivity {
         try {
             //get the list
             ListView AssessmentListAdpt = findViewById(R.id.CourseAvailableAssessmentList);
-            Collections.sort(CourseData.getAvailableAssessmentItems());
+            ArrayList<String> list = new ArrayList<>();
+            //determines if its a new entry here
+            if (CourseName == null){
+                list = AssessmentData.getAssessmentsbyNames();
+            }else{
+                list = CourseData.getAvailableAssessmentByTerm(CourseName);
+            }
+
+            if (list != null){
+                Collections.sort(list);
+            }
            // get the database access
-           listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1, CourseData.getAvailableAssessmentItems());
+           listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,list);
             AssessmentListAdpt.setAdapter(listViewAdapter);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadAvailableMentorList(){
+        //load the Course list
+        Cursor c = null;
+        try {
+            //get the list
+            ListView MentorListAdpt = findViewById(R.id.CourseAvailableMentorsList);
+            ArrayList<String> list = new ArrayList<>();
+            //determines if its a new entry here
+            if (CourseName == null){
+                list = MentorData.getMentorsbyNames();
+            }else{
+                list = CourseData.getAvailableMentorByTerm(CourseName);
+            }
+
+            if (list != null){
+                Collections.sort(list);
+            }
+            // get the database access
+            listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,list);
+            MentorListAdpt.setAdapter(listViewAdapter);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -322,24 +413,25 @@ public class CourseDetailsActivity extends MainActivity {
             //get the list
             ListView AssessmentListAdpt = findViewById(R.id.CourseAssignedAssessmentList);
             //set the adapter for list
-            // get the database access
-            assignedAssessmentItem = new ArrayList<>();
-            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            c = database.rawQuery("SELECT "+ dbAssignedAssessment.COLUMN_ASSESSMENTNAME+" FROM "+dbAssignedAssessment.TABLE_NAME+" WHERE "+dbAssignedAssessment.COLUMN_COURSENAME+" = '" +CourseName+"'", null);
-            listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,assignedAssessmentItem);
-            if (c.moveToFirst()) {
-                do {
-                    assignedAssessmentItem.add(c.getString(0));// Add items to the adapter
-                } while (c.moveToNext());
-
-            }
+            listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,CourseData.getAssignedAssessmentByTerm(CourseName));
             AssessmentListAdpt. setAdapter(listViewAdapter);
-            database.close();
+
         }catch(Exception e){
-            if (e.getMessage().contains("no such table")){
-                database = new dbSqlLiteManager(this).getWritableDatabase();
-                database.execSQL(dbAssignedAssessment.CREATE_TABLE);
-            }
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadAssignedMentorList(){
+        //load the Course list assigned
+        Cursor c = null;
+        try {
+            //get the list
+            ListView AssessmentListAdpt = findViewById(R.id.CourseAssignedMentorsList);
+            //set the adapter for list
+            listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,CourseData.getAssignedMentorByTerm(CourseName));
+            AssessmentListAdpt. setAdapter(listViewAdapter);
+
+        }catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -350,7 +442,7 @@ public class CourseDetailsActivity extends MainActivity {
         AssessmentListAvailable = findViewById(R.id.CourseAvailableAssessmentList);
         try {
             if (position > -1) {
-                String AssessmentName = AssessmentListAssigned.getItemAtPosition(position).toString();
+                String AssessmentName = AssessmentListAvailable.getItemAtPosition(position).toString();
                 if (!AssessmentName.isEmpty() && !assignedAssessmentItem.contains(AssessmentName)) {
                     //assign the course name to the list
                     listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1, assignedAssessmentItem);
@@ -361,8 +453,8 @@ public class CourseDetailsActivity extends MainActivity {
                     //remove the assigned course from the available list
                     listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,AvailableAssessmentItems);
                     AssessmentListAvailable.setAdapter(listViewAdapter);
+                    Snackbar.make(contentView, AssessmentName + " Assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
-                Snackbar.make(contentView, AssessmentName + " Assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -385,8 +477,58 @@ public class CourseDetailsActivity extends MainActivity {
                     //assign course name back to the available list
                     listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,assignedAssessmentItem);
                     AssessmentListAssigned.setAdapter(listViewAdapter);
+                    Snackbar.make(contentView, AssessmentName + " Removed", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
-                Snackbar.make(contentView, AssessmentName + " Removed", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void AssignMentorToCourse(View view, int position){
+        //add and remove items from assign and available list of assessment
+        MentorListAssigned = findViewById(R.id.CourseAssignedMentorsList);
+        MentorListAvailable = findViewById(R.id.CourseAvailableMentorsList);
+        try {
+            if (position > -1) {
+                String MentorName = MentorListAssigned.getItemAtPosition(position).toString();
+                if (!MentorName.isEmpty() && !assignedMentorItem.contains(MentorName)) {
+                    //assign the course name to the list
+                    listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1, assignedMentorItem);
+                    assignedMentorItem.add(MentorName);
+                    AvailableMentorItems.remove(MentorName);//remove from the available list
+                    MentorListAssigned.setAdapter(listViewAdapter);
+
+                    //remove the assigned course from the available list
+                    listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,AvailableMentorItems);
+                    MentorListAvailable.setAdapter(listViewAdapter);
+                    Snackbar.make(contentView, MentorName + " Assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void RemoveAssignedMentor(View view, int position){
+        //add and remove items from assign and available list of assessment
+        MentorListAssigned = findViewById(R.id.CourseAssignedMentorsList);
+        MentorListAvailable = findViewById(R.id.CourseAvailableMentorsList);
+        try {
+            if (position > -1) {
+                String MentorName = MentorListAssigned .getItemAtPosition(position).toString();
+                if (!MentorName.isEmpty() && !AvailableMentorItems.contains(MentorName)) {
+                    //remove the assigned course from the available list
+                    listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,AvailableMentorItems);
+                    AvailableMentorItems.add(MentorName);
+                    assignedMentorItem.remove(MentorName);  //remove from the available list
+                    MentorListAvailable.setAdapter(listViewAdapter);
+
+                    //assign course name back to the available list
+                    listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,assignedMentorItem);
+                    MentorListAssigned.setAdapter(listViewAdapter);
+                    Snackbar.make(contentView, MentorName + " Removed", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
             }
         }catch(Exception e){
             e.printStackTrace();

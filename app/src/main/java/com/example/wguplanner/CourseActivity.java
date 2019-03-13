@@ -62,27 +62,18 @@ public class CourseActivity extends MainActivity {
             }
         });
 
-        LoadCourseList();
+        LoadList();
     }
 
-    private void LoadCourseList(){
+    private void LoadList(){
         //load the Course list
-        Cursor c = null;
-        TreeMap<String, Course> data = new TreeMap<>();
         try {
-            Course CourseItem = null;
-            //get the list
             ListView CourseListAdpt = findViewById(R.id.courseListView);
             //set the adapter for list
-            Collections.sort(CourseData.getCoursesbyNames());
             adapter = new ArrayAdapter<String>(CourseActivity.this, android.R.layout.simple_list_item_1, CourseData.getCoursesbyNames());
             CourseListAdpt.setAdapter(adapter);
-            database.close();
-        }catch(Exception e){
-            if (e.getMessage().contains("no such table")){
-                database.execSQL(dbCourse.CREATE_TABLE);
-            }
-            e.printStackTrace();
+           }catch(Exception e){
+           e.printStackTrace();
         }
     }
 

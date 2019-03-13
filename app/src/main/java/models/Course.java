@@ -1,6 +1,6 @@
 package models;
 
-public class Course {
+public class Course extends Assessment {
     private String title;
     private String startDate;
     private String endDate;

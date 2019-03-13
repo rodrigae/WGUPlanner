@@ -23,5 +23,10 @@
     <string name="EndDateLabel">End Date: </string>
     <string name="UntilDateLabel">Until</string>
     <string name="shareViaEmail">Email</string>
-
+    <string name="GoalText">Goal Date:</string>
+    <string name="StatusLabel">Status:</string>
+    <string name="TypeLabel">Type:</string>
+    <string name="CourseLabel">Course:</string>
+    <string name="CourseListLabel">Where Used: </string>
+    <string name="RemindMeLabel">Remind Me</string>
 </resources>

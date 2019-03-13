@@ -2,7 +2,6 @@ package wguplanner_details;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
@@ -18,11 +17,9 @@ import com.example.wguplanner.R;
 import com.example.wguplanner.MainActivity;
 import com.example.wguplanner.TermActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import Database.dbAssignedCourse;
 import Database.dbSqlLiteManager;
 import Database.dbStatements;
 import Utilities.CourseData;
@@ -63,9 +60,11 @@ public class TermDetailsActivity extends MainActivity {
         //load the data if the user is attempting to edit an item.
         TermName = getIntent().getStringExtra("Term");
         if (TermName != null){
-
             setTheFieldsForEditing();
             LoadAssignedCourseList();
+        }else{
+            //clear the list since we are creating something ne
+            assignedCourseItem.clear();//clear the items
         }
 
         LoadAvailableCourseList();
@@ -74,6 +73,7 @@ public class TermDetailsActivity extends MainActivity {
         final ListView CourseListAvailable = findViewById(R.id.TermavailableCourseList);
         CourseListAvailable.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                AssignCourseToTerm(view, position);
             }
         });
@@ -135,7 +135,7 @@ public class TermDetailsActivity extends MainActivity {
                         //tells the system is a new entry
                         TermData.addNewAssignedCourses(term.getTitle(), assignedCourseItem);
                     }
-                    LoadCreatedCourses();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
+                    LoadCourseList();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
                     LoadTermList();
                     startActivity(new Intent(TermDetailsActivity.this, TermActivity.class));
 
@@ -161,10 +161,10 @@ public class TermDetailsActivity extends MainActivity {
                     dbStatements.deleteTerm(TermName, database);
                     database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                     dbStatements.deleteAssignedCourses(TermName, database);
-                    LoadCreatedCourses();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
+                    LoadCourseList();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
                     LoadTermList();
-                    startActivity(new Intent(TermDetailsActivity.this, TermActivity.class));
 
+                    startActivity(new Intent(TermDetailsActivity.this, TermActivity.class));
                 }else{
                     Snackbar.make(contentView, "Please remove all assigned courses before deleting this term.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
@@ -314,7 +314,6 @@ public class TermDetailsActivity extends MainActivity {
                 assignedCourseItem.add(CourseName);
                 AvailableCourseItems.remove(CourseName);//remove from the available list
                 CourseListAssigned.setAdapter(listViewAdapter);
-               // TermData.setAssignedCourseItem(assignedCourseItem);//save to the container which will be used for saving later
 
                 //remove the assigned course from the available list
                 listViewAdapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, AvailableCourseItems);
@@ -341,7 +340,6 @@ public class TermDetailsActivity extends MainActivity {
                     if (!AvailableCourseItems.contains(CourseName)){AvailableCourseItems.add(CourseName);}
                     assignedCourseItem.remove(CourseName);  //remove from the available list
                     CourseListAvailable.setAdapter(listViewAdapter);
-                    //TermData.setAssignedCourseItem(assignedCourseItem);//save to the container which will be used for saving later
 
                     //assign course name back to the available list
                     listViewAdapter = new ArrayAdapter<String>(TermDetailsActivity.this, android.R.layout.simple_list_item_1, assignedCourseItem);

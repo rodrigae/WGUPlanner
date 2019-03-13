@@ -10,12 +10,11 @@ import models.Term;
 public class TermData {
     //class is used to store TermData that can be reused accross the app.
     private static TreeMap<String, Term> CreatedTermList = new TreeMap<>();
-
-    private static ArrayList<String> assignedCourseItem = new ArrayList<>();
-
     private static TreeMap<String, ArrayList<String>> AssignedCourses = new TreeMap<>();
+  //  private static TreeMap<String, ArrayList<String>> AssignCourseList = new TreeMap<>();
 
-      public static ArrayList<String> getTermbyNames(){
+
+    public static ArrayList<String> getTermbyNames(){
         //load the terms by names
         ArrayList<String> terms = new ArrayList<>();
         for (String TermName : CreatedTermList.keySet()){
@@ -58,16 +57,15 @@ public class TermData {
         return available;
     }
 
-    public static void addNewAssignedCourses(String TermName, ArrayList<String> courses){
-          AssignedCourses.put(TermName, courses);
-    }
 
 
     public static void setAssignedCourses(TreeMap<String, ArrayList<String>> assignedCourses) {
         AssignedCourses = assignedCourses;
     }
 
-    private static TreeMap<String, ArrayList<String>> AssignCourseList = new TreeMap<>();
+    public static void addNewAssignedCourses(String TermName, ArrayList<String> courses){
+        AssignedCourses.put(TermName, courses);
+    }
 
     public static TreeMap<String, Term> getCreatedTermList() {
         return CreatedTermList;
@@ -80,17 +78,15 @@ public class TermData {
         CreatedTermList.put(Title, createdTermList);
     }
 
+    //used in CourseDetails
     public static TreeMap<String, ArrayList<String>> getAssignCourseList() {
-        return AssignCourseList;
+        return AssignedCourses ;
     }
 
+    /*
     public static void addAssignCourseList(String TermName, ArrayList<String> assignCourseList) {
         AssignCourseList.put(TermName,assignCourseList);
-    }
-
-   public  static void setAssignCourseList(TreeMap<String, ArrayList<String>> assignCourseList) {
-        AssignCourseList = assignCourseList;
-    }
+    }*/
 
 
 
