@@ -177,7 +177,12 @@ public class TermDetailsActivity extends MainActivity {
 
     //load the customer bar for use
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {getMenuInflater().inflate(R.menu.details_toolbar, menu);return true;}
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        MenuItem share = menu.findItem(R.id.share);
+        share.setVisible(false);
+        return true;
+    }
 
     //validates user entries
     private boolean validateEntry() {

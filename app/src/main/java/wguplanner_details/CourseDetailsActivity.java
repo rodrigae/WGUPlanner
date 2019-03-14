@@ -237,6 +237,20 @@ public class CourseDetailsActivity extends MainActivity {
 
 
         }
+
+        if (id == R.id.share){
+            try {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                String share = "Course Notes: " + getData("CourseTitle") + " - "+ "\r\n" + getData("notes");
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, share);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, getData("CourseTitle") + " Notes");
+                shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(shareIntent, "Share Notes"));
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
             return true;
         }
 

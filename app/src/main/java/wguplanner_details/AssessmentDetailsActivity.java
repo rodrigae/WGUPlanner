@@ -85,6 +85,8 @@ public class AssessmentDetailsActivity extends MainActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        MenuItem share = menu.findItem(R.id.share);
+        share.setVisible(false);
         return true;
     }
 

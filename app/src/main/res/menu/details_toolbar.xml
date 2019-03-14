@@ -11,10 +11,10 @@
         android:title="@string/saveToolbar"
         app:showAsAction="ifRoom" />
       <item
-        android:id="@+id/share_via_sms"
-        android:icon="@drawable/ic_menu_sms"
+        android:id="@+id/share"
+        android:icon="@drawable/ic_menu_share"
         android:orderInCategory="100"
-        android:title="sms"
+        android:title="share"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_delete"
