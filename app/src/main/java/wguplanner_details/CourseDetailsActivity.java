@@ -211,7 +211,6 @@ public class CourseDetailsActivity extends MainActivity {
                         termsList.add(Name);
                     }
                 }
-
                 if (termsList.isEmpty()) {
                     if (assignedAssessmentItem.isEmpty() && assignedMentorItem.isEmpty()) {
                         //delete the Course from Course table and assignedcourse
@@ -428,7 +427,7 @@ public class CourseDetailsActivity extends MainActivity {
             ListView AssessmentListAdpt = findViewById(R.id.CourseAssignedMentorsList);
             //set the adapter for list
             listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1,CourseData.getAssignedMentorByTerm(CourseName));
-            AssessmentListAdpt. setAdapter(listViewAdapter);
+            AssessmentListAdpt.setAdapter(listViewAdapter);
 
         }catch(Exception e){
             e.printStackTrace();
@@ -490,7 +489,7 @@ public class CourseDetailsActivity extends MainActivity {
         MentorListAvailable = findViewById(R.id.CourseAvailableMentorsList);
         try {
             if (position > -1) {
-                String MentorName = MentorListAssigned.getItemAtPosition(position).toString();
+                String MentorName = MentorListAvailable.getItemAtPosition(position).toString();
                 if (!MentorName.isEmpty() && !assignedMentorItem.contains(MentorName)) {
                     //assign the course name to the list
                     listViewAdapter = new ArrayAdapter<String>(CourseDetailsActivity.this, android.R.layout.simple_list_item_1, assignedMentorItem);

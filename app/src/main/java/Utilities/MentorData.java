@@ -23,6 +23,17 @@ public class MentorData {
         return Mentors;
     }
 
+    public static ArrayList<String> getWhereUsedMentor(String MentorName){
+        ArrayList<String> listOfUsedLocation = new ArrayList<>();
+        for (String Mentor : CourseData.getAssignedMentor().keySet()){
+            ArrayList<String> contains = CourseData.getAssignedMentor().get(Mentor);
+            if (contains.contains(MentorName)){
+                listOfUsedLocation.add(Mentor);
+            }
+        }
+        return listOfUsedLocation;
+    }
+
 
     public static TreeMap<String, Mentor> getCreatedMentor() {
         return CreatedMentor;

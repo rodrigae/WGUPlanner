@@ -35,13 +35,6 @@ public class AssessmentData {
         return listOfUsedLocation;
     }
 
-    public static TreeMap<String, ArrayList<String>> getAssessmentWhereUsed() {
-        return AssessmentWhereUsed;
-    }
-
-    public static void setAssessmentWhereUsed(TreeMap<String, ArrayList<String>> assessmentWhereUsed) {
-        AssessmentWhereUsed = assessmentWhereUsed;
-    }
 
     public static TreeMap<String, Assessment> getCreatedAssessment() {
         return CreatedAssessment;

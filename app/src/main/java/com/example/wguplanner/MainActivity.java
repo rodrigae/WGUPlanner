@@ -134,10 +134,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void ReloadData(){
         LoadTermList();
         LoadCourseList();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
+        LoadMentorList();
         LoadAssessmentList();//Load List of assessment
         LoadAssignedCourseList();// Load assign courses per term
         LoadAssignedAssessmentList();
         LoadAssignedMentorList();
+
     }
     protected void LoadTermList(){
         //load the term list
@@ -168,39 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
     }
-/*
-    private void AddAssignedCourseListToTermData(){
-        //load the Course list assigned and added to TermData for use
-        Cursor c = null;
-        try {
-            // get the database access
-            ArrayList<String> assignedCourseItem = new ArrayList<>();
-           ArrayList<String> termsList = new ArrayList<>();
-           String TermName = null;
-            for (String Name : TermData.getCreatedTermList().keySet()){
-                termsList.add(Name);
-            }
-           database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            for (int i=0; i<termsList.size(); i++) {
-                TermName = termsList.get(i);
-                c = database.rawQuery("SELECT "+ dbAssignedCourse.COLUMN_COURSENAME + " FROM " +dbAssignedCourse.TABLE_NAME+" WHERE " + dbAssignedCourse.COLUMN_TERMNAME+" = '" + TermName + "'", null);
-                if (c.moveToFirst()) {
-                    do {
-                        assignedCourseItem.add(c.getString(0));// Add items to the adapter
-                    } while (c.moveToNext());
-                    TermData.addAssignCourseList(TermName, assignedCourseItem);
-                }
-            }
-            database.close();
-        }catch(Exception e){
-            if (e.getMessage().contains("no such table")){
-                database = new dbSqlLiteManager(this).getWritableDatabase();
-                database.execSQL(dbAssignedCourse.CREATE_TABLE);
-            }
-            e.printStackTrace();
-        }
-    }
-    */
+
 
 
     private void LoadAssignedCourseList(){
@@ -290,6 +260,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    protected void LoadMentorList(){
+        //load the term list
+        Cursor c = null;
+        TreeMap<String, Mentor> data = new TreeMap<>();
+        try {
+            Mentor mentortItem = null;
+            //get the list
+            //get the database access
+            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
+            c = database.rawQuery("SELECT " + dbMentor.COLUMN_MENTORNAME+","+ dbMentor.COLUMN_MENTOREMAIL+","+ dbMentor.COLUMN_PHONE+" FROM "+ dbMentor.TABLE_NAME, null);
+            if (c.moveToFirst()) {
+                do {
+                    mentortItem = new Mentor(c.getString(0), c.getString(1), c.getString(2));//add the list of items to the treemap for later retrival
+                    data.put(c.getString(0), mentortItem);
+                } while (c.moveToNext());
+            }
+            MentorData.setCreatedMentor(data);
+            database.close();
+        }catch(Exception e){
+            if (e.getMessage().contains("no such table")){
+                database = new dbSqlLiteManager(this).getWritableDatabase();
+                database.execSQL(dbMentor.CREATE_TABLE);
+            }
+            e.printStackTrace();
+        }
+    }
+
     protected void LoadCreatedMentor(){
         //load the term list
         Cursor c = null;
@@ -299,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //get the list
             //get the database access
             database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            c = database.rawQuery("SELECT " + dbMentor.COLUMN_MMENTORNAME+","+ dbMentor.COLUMN_MENTOREMAIL+","+ dbMentor.COLUMN_PHONE+" FROM "+ dbMentor.TABLE_NAME, null);
+            c = database.rawQuery("SELECT " + dbMentor.COLUMN_MENTORNAME +","+ dbMentor.COLUMN_MENTOREMAIL+","+ dbMentor.COLUMN_PHONE+" FROM "+ dbMentor.TABLE_NAME, null);
             if (c.moveToFirst()) {
                 do {
                     mentorItem = new Mentor(c.getString(0), c.getString(1), c.getString(2));
@@ -368,6 +365,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }
                 AssignedMentor.put(CourseName, assignedMentorItem);
+                assignedMentorItem = new ArrayList<>();
             }
             CourseData.setAssignedMentor(AssignedMentor);
             database.close();

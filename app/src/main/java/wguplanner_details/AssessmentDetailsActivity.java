@@ -135,7 +135,7 @@ public class AssessmentDetailsActivity extends MainActivity {
             if (update) {
                 //check to see if the course is being use in a term before deleting
                  ArrayList<String> whereUsed = AssessmentData.getWhereUsedAssessment(assessmentName);
-              if (whereUsed == null) {
+              if (whereUsed == null || whereUsed.isEmpty()) {
                         //delete the Course from Course table and assignedcourse
                     dbStatements.deleteAssessment(assessmentName, database);
                     database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement

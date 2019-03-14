@@ -7,6 +7,7 @@ import java.util.List;
 
 import models.Assessment;
 import models.Course;
+import models.Mentor;
 import models.Term;
 public class dbStatements {
     public static boolean SaveTermDetails(Object obj, SQLiteDatabase database) {
@@ -72,6 +73,25 @@ public class dbStatements {
             e.printStackTrace();
         }
 
+        return false;
+
+    }
+    public static boolean SaveMentorDetails(Object obj, SQLiteDatabase database) {
+        //save the courses assigned for the term
+        try {
+            if (obj instanceof Mentor) {
+                ContentValues values = null;
+
+                    values = new ContentValues();
+                    values.put(dbMentor.COLUMN_MENTORNAME, ((Mentor) obj).getName());
+                    values.put(dbMentor.COLUMN_PHONE, ((Mentor) obj).getPhone());
+                    values.put(dbMentor.COLUMN_MENTOREMAIL, ((Mentor) obj).getEmail());
+                    long newRowId = database.insert(dbMentor.TABLE_NAME, null, values);
+                return true;
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         return false;
 
     }
@@ -183,6 +203,16 @@ public class dbStatements {
         try{
             //remove the course from the database
             database.execSQL("DELETE FROM "+ dbCourse.TABLE_NAME+ " WHERE "+ dbCourse.COLUMN_COURSENAME + " = '"+CourseName+"'");
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteMentor(String MentorName, SQLiteDatabase database){
+        try{
+            //remove the course from the database
+            database.execSQL("DELETE FROM "+ dbMentor.TABLE_NAME+ " WHERE "+ dbMentor.COLUMN_MENTORNAME + " = '"+MentorName+"'");
 
         }catch(Exception e){
             e.printStackTrace();
