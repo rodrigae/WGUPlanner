@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +23,7 @@ import Database.dbCourse;
 import Database.dbSqlLiteManager;
 import Utilities.CourseData;
 import models.Course;
+import wguplanner_details.AssessmentDetailsActivity;
 import wguplanner_details.CourseDetailsActivity;
 import wguplanner_details.TermDetailsActivity;
 
@@ -37,13 +40,6 @@ public class CourseActivity extends MainActivity {
         View contentView = inflater.inflate(R.layout.app_main_course, null, false);
        // drawer.addView(contentView, 0);
         drawer.addView(contentView,0);
-        fab = (FloatingActionButton) findViewById(R.id.addCourse);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(CourseActivity.this, CourseDetailsActivity.class));
-                           }
-        });
 
         //edit the term
         final ListView Course = findViewById(R.id.courseListView);
@@ -65,6 +61,33 @@ public class CourseActivity extends MainActivity {
 
         LoadList();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        MenuItem item = menu.findItem(R.id.share);
+        item.setVisible(false);
+        item = menu.findItem(R.id.action_save);
+        item.setVisible(false);
+        item = menu.findItem(R.id.action_delete);
+        item.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so lon
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_add) {
+            startActivity(new Intent(CourseActivity.this, CourseDetailsActivity.class));
+        }
+        return true;
+    }
+
 
     private void LoadList(){
         //load the Course list

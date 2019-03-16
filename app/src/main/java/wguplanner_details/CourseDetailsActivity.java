@@ -118,8 +118,6 @@ public class CourseDetailsActivity extends MainActivity {
 
         //assign the items for later use
         if (CourseName == null){
-            edittext = findViewById(R.id.CourseTitleEditText);
-            edittext.requestFocus();
             AvailableAssessmentItems = AssessmentData.getAssessmentsbyNames();
             AvailableMentorItems = MentorData.getMentorsbyNames();
         }else {
@@ -137,9 +135,10 @@ public class CourseDetailsActivity extends MainActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        MenuItem item = menu.findItem(R.id.action_add);
+        item.setVisible(false);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

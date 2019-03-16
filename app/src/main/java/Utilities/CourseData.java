@@ -87,10 +87,6 @@ public class CourseData {
     }
 
 
-
-    public static void addNewAssignedAssessment(String CourseName, ArrayList<String> assessment){
-        AssignedAssessment.put(CourseName, assessment);
-    }
     public static TreeMap<String, ArrayList<String>> getAssignedMentor() {
         return AssignedMentor;
     }
@@ -126,10 +122,6 @@ public class CourseData {
 
     public static void setAssignedMentor(TreeMap<String, ArrayList<String>> assignedMentor) {
         AssignedMentor = assignedMentor;
-    }
-
-    public static void addNewAssignedMentor(String CourseName, ArrayList<String> mentor){
-        AssignedMentor.put(CourseName, mentor);
     }
 
 
@@ -169,9 +161,6 @@ public class CourseData {
         CreatedCourse = data;
     }
 
-    public static void AddNewCreatedCourse(String CourseName, Course createdTermList){
-        CreatedCourse.put(CourseName, createdTermList);
-    }
 
 
 

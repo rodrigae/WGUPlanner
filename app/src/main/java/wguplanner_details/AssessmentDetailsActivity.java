@@ -79,15 +79,15 @@ public class AssessmentDetailsActivity extends MainActivity {
                          }
         );
         LoadWhereUsedCoursesList();
-        edittext = findViewById(R.id.AssessmentTitleEditText);
-        edittext.requestFocus();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.details_toolbar, menu);
-        MenuItem share = menu.findItem(R.id.share);
-        share.setVisible(false);
+        MenuItem item = menu.findItem(R.id.share);
+        item.setVisible(false);
+        item = menu.findItem(R.id.action_add);
+        item.setVisible(false);
         return true;
     }
 

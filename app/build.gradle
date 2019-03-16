@@ -25,16 +25,6 @@ android {
         sourceCompatibility 1.8
     }
 
-    sourceSets {
-        main {
-            res.srcDirs =
-                    [
-                            'src/main/res/layout/layout_land',
-                            'src/main/res/layout',
-                            'src/main/res'
-                            , 'src/main/res/layout/layout_land2']
-        }
-    }
 }
 
 

@@ -98,7 +98,6 @@ public class TermDetailsActivity extends MainActivity {
         if (!AvailableCourseItems.isEmpty()) {
             Snackbar.make(contentView, "Select item from list to assign or un-assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         }
-        edittext = findViewById(R.id.TermTitleEditText); edittext.requestFocus();
     }
 
     @Override
@@ -182,8 +181,10 @@ public class TermDetailsActivity extends MainActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.details_toolbar, menu);
-        MenuItem share = menu.findItem(R.id.share);
-        share.setVisible(false);
+        MenuItem item = menu.findItem(R.id.share);
+        item.setVisible(false);
+        item = menu.findItem(R.id.action_add);
+        item.setVisible(false);
         return true;
     }
 

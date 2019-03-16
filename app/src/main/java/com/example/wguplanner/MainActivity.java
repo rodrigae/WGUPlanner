@@ -224,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 }
                 AssignedCourses.put(TermName, assignedCourseItem);
+                assignedCourseItem = new ArrayList<>();
 
             }
             TermData.setAssignedCourses(AssignedCourses);

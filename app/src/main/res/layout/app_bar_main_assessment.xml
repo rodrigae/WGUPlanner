@@ -21,27 +21,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/design_default_color_primary_dark"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"   app:menu="@menu/details_toolbar" />
 
         </android.support.design.widget.AppBarLayout>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addAssessment"
-            android:layout_width="wrap_content"
-            android:layout_height="51dp"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:layout_marginEnd="21dp"
-            android:layout_marginBottom="16dp"
-            app:backgroundTint="@color/design_default_color_primary_dark"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_menu_add" />
 
         <ListView
             android:id="@+id/assessmentListView"
             android:layout_width="match_parent"
-            android:layout_height="732dp"
+            android:layout_height="676dp"
             android:layout_marginTop="55dp"
             android:background="@android:color/white"
             android:scrollbars="horizontal|vertical"
