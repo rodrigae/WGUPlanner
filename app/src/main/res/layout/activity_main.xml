@@ -10,6 +10,24 @@
     tools:openDrawer="start"
     tools:context=".MainActivity"
     >
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/main_logo"
+            android:layout_width="328dp"
+            android:layout_height="282dp"
+            android:contentDescription="background image"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/main_logo" />
+    </android.support.constraint.ConstraintLayout>
+
     <include
         layout="@layout/content_main"
         android:layout_width="match_parent"

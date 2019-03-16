@@ -41,7 +41,8 @@ public class MentorDetailsActivity extends MainActivity {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         contentView = inflater.inflate(R.layout.app_main_mentor_detail, null, false);
-        // drawer.addView(contentView, 0);
+        background = findViewById(R.id.main_logo);
+        background.setVisibility(View.GONE);
         drawer.addView(contentView,0);
 
 

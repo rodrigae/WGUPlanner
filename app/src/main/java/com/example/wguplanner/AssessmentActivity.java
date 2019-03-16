@@ -25,7 +25,8 @@ public class AssessmentActivity extends MainActivity {
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.app_bar_main_assessment, null, false);
-       // drawer.addView(contentView, 0);
+        background = findViewById(R.id.main_logo);
+        background.setVisibility(View.GONE);
         drawer.addView(contentView,0);
 
         //edit the AssessmentName

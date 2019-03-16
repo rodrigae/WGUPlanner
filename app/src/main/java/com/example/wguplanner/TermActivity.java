@@ -38,6 +38,8 @@ public class TermActivity extends MainActivity {
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.app_bar_main_term, null, false);
+        background = findViewById(R.id.main_logo);
+        background.setVisibility(View.GONE);
         drawer.addView(contentView,0);
 
 

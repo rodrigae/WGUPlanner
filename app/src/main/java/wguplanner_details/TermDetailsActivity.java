@@ -54,6 +54,8 @@ public class TermDetailsActivity extends MainActivity {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.app_main_term_detail, null, false);
+        background = findViewById(R.id.main_logo);
+        background.setVisibility(View.GONE);
         drawer.addView(contentView,0);
 
 

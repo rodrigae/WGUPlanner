@@ -62,7 +62,8 @@ public class CourseDetailsActivity extends MainActivity {
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         contentView = inflater.inflate(R.layout.app_main_course_detail, null, false);
-        // drawer.addView(contentView, 0);
+        background = findViewById(R.id.main_logo);
+        background.setVisibility(View.GONE);
         drawer.addView(contentView,0);
 
         //obtain access from the database

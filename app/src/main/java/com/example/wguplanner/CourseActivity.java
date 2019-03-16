@@ -38,7 +38,8 @@ public class CourseActivity extends MainActivity {
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.app_main_course, null, false);
-       // drawer.addView(contentView, 0);
+        background = findViewById(R.id.main_logo);
+        background.setVisibility(View.GONE);
         drawer.addView(contentView,0);
 
         //edit the term

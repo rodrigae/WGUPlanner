@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -31,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TimePicker;
 
 import java.util.ArrayList;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   private ArrayList<String> Reminders = new ArrayList<String>();
   private String AssessmentReminders = null;
   private String CourseReminders = null;
+  protected ImageView background = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        background = findViewById(R.id.main_logo);
+        background.setVisibility(View.VISIBLE);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
