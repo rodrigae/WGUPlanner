@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/TermCourse"
+<ScrollView xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/detailtermToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/design_default_color_primary_dark"
-            app:menu="@menu/details_toolbar"
-            app:title="@string/termdetails"
-            >
-
-        </android.support.v7.widget.Toolbar>
-
-    </android.support.design.widget.AppBarLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/detailtermToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/design_default_color_primary_dark"
+                app:menu="@menu/details_toolbar"
+                app:title="@string/termdetails">
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.AppBarLayout>
 
         <TextView
             android:id="@+id/termTitlelabel2"
@@ -74,17 +73,13 @@
             android:layout_width="347dp"
             android:layout_height="90dp"
             android:layout_marginStart="18dp"
-            android:layout_marginLeft="18dp"
             android:layout_marginTop="232dp"
-            android:layout_marginEnd="46dp"
-            android:layout_marginRight="46dp"
             android:background="@android:color/background_light"
             android:ems="10"
             android:gravity="top"
             android:hint="Term Descrition"
             android:inputType="textMultiLine"
             android:singleLine="false"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,14 +89,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="188dp"
-            android:layout_marginEnd="253dp"
-            android:layout_marginRight="253dp"
             android:background="@android:color/background_light"
             android:ems="10"
             android:inputType="date"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -152,48 +143,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="216dp"
-            android:layout_marginLeft="216dp"
             android:layout_marginTop="188dp"
-            android:layout_marginEnd="46dp"
-            android:layout_marginRight="46dp"
             android:background="@android:color/background_light"
             android:ems="10"
             android:inputType="date"
 
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ListView
             android:id="@+id/TermassignedCourseList"
             android:layout_width="183dp"
-            android:layout_height="260dp"
+            android:layout_height="292dp"
+            android:layout_marginStart="219dp"
             android:layout_marginTop="368dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:background="@android:color/background_light"
             android:scrollbars="horizontal|vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.991"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ListView
             android:id="@+id/TermavailableCourseList"
             android:layout_width="182dp"
-            android:layout_height="260dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_height="292dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="368dp"
 
             android:background="@android:color/background_light"
             android:scrollbars="horizontal|vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.029"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</ScrollView>

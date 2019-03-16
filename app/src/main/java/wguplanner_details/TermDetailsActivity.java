@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
+
 import com.example.wguplanner.R;
 import com.example.wguplanner.MainActivity;
 import com.example.wguplanner.TermActivity;
@@ -35,6 +37,7 @@ public class TermDetailsActivity extends MainActivity {
     private String TermName = "";
 
 
+
     private ArrayAdapter<String> listViewAdapter;
     ListView CourseListAssigned = null;
     ListView CourseListAvailable = null;
@@ -44,7 +47,6 @@ public class TermDetailsActivity extends MainActivity {
 
     //view is used for snackbar notification
     private View contentView = null;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
