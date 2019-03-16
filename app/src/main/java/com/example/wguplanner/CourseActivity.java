@@ -52,6 +52,7 @@ public class CourseActivity extends MainActivity {
                 try {
                     //Load the course into CourseDetails
                     String CourseName = Course.getItemAtPosition(position).toString();
+                    CourseName = CourseName.substring(0,CourseName.indexOf("\n")).trim();
                     Intent intent = new Intent(CourseActivity.this, CourseDetailsActivity.class);
                     intent.putExtra("Assessment", CourseName);
                     startActivity(intent);
@@ -70,7 +71,7 @@ public class CourseActivity extends MainActivity {
         try {
             ListView CourseListAdpt = findViewById(R.id.courseListView);
             //set the adapter for list
-            adapter = new ArrayAdapter<String>(CourseActivity.this, android.R.layout.simple_list_item_1, CourseData.getCoursesbyNames());
+            adapter = new ArrayAdapter<String>(CourseActivity.this, android.R.layout.simple_list_item_1, CourseData.getCoursesbyNamesWithDates());
             CourseListAdpt.setAdapter(adapter);
            }catch(Exception e){
            e.printStackTrace();

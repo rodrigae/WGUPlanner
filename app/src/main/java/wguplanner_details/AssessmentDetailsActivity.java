@@ -79,7 +79,8 @@ public class AssessmentDetailsActivity extends MainActivity {
                          }
         );
         LoadWhereUsedCoursesList();
-
+        edittext = findViewById(R.id.AssessmentTitleEditText);
+        edittext.requestFocus();
     }
 
     @Override

@@ -116,11 +116,10 @@ public class CourseDetailsActivity extends MainActivity {
             }
         });
 
-
-        Snackbar.make(contentView, "Select item from list to assign or un-assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
         //assign the items for later use
         if (CourseName == null){
+            edittext = findViewById(R.id.CourseTitleEditText);
+            edittext.requestFocus();
             AvailableAssessmentItems = AssessmentData.getAssessmentsbyNames();
             AvailableMentorItems = MentorData.getMentorsbyNames();
         }else {
@@ -130,6 +129,9 @@ public class CourseDetailsActivity extends MainActivity {
             AvailableMentorItems =  CourseData.getAvailableMentorByTerm(CourseName);
         }
 
+        if (!AvailableMentorItems.isEmpty() && !AvailableAssessmentItems.isEmpty()){
+            Snackbar.make(contentView, "Select item from list to assign or un-assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
     }
 
     @Override

@@ -1,7 +1,9 @@
 package Utilities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.TreeMap;
 
 import models.Course;
@@ -24,6 +26,39 @@ public class CourseData {
             Collections.sort(assessment);
         }
         return assessment;
+    }
+
+    public static String getCoursesbyNamesReminders() {
+        //load the terms by names
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        String today = format.format(date);
+
+        StringBuilder courseList = new StringBuilder();
+
+        for (String CourseName : CreatedCourse.keySet()) {
+
+
+            if (CreatedCourse.get(CourseName).getReminderStartDate().equals("Yes")){
+                if (today.equals(CreatedCourse.get(CourseName).getStartDate())){
+                    if (!courseList.toString().contains("Course Start Date Reminder/s: \n")){
+                        courseList.append("Course Start Date Reminder/s: ");
+                    }
+                    courseList.append(CourseName+ " - " +CreatedCourse.get(CourseName).getStartDate());
+                    courseList.append("\n");
+                }
+            }
+            if (CreatedCourse.get(CourseName).getIsReminderEndDate().equals("Yes")){
+                if (today.equals(CreatedCourse.get(CourseName).getEndDate())){
+                    if (!courseList.toString().contains("Course End Date Reminder/s: \n")){
+                        courseList.append("Course End Date Reminder/s: ");
+                    }
+                    courseList.append(CourseName+ " - " +CreatedCourse.get(CourseName).getEndDate());
+                    courseList.append("\n");
+                }
+            }
+        }
+        return courseList.toString().trim();
     }
 
     public static ArrayList<String> getAvailableAssessmentByTerm(String CourseName) {
@@ -98,6 +133,20 @@ public class CourseData {
     }
 
 
+    public static ArrayList<String> getCoursesbyNamesWithDates() {
+        //load the terms by names
+        ArrayList<String> courses = new ArrayList<>();
+        for (String CourseName : CreatedCourse.keySet()) {
+            courses.add(CourseName + " \n from " + CreatedCourse.get(CourseName).getStartDate() + " to " + CreatedCourse.get(CourseName).getEndDate());
+        }
+
+        if (courses != null) {
+            //sort in order
+            Collections.sort(courses);
+        }
+        return courses;
+    }
+
     public static ArrayList<String> getCoursesbyNames() {
         //load the terms by names
         ArrayList<String> courses = new ArrayList<>();
@@ -111,7 +160,6 @@ public class CourseData {
         }
         return courses;
     }
-
 
     public static TreeMap<String, Course> getCreatedCourse() {
         return CreatedCourse;

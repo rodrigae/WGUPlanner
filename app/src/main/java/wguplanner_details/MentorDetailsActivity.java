@@ -48,9 +48,14 @@ public class MentorDetailsActivity extends MainActivity {
         mentorName = getIntent().getStringExtra("Mentor");
         if (mentorName != null){
             setTheFieldsForEditing();
+        }else{
+            edittext = findViewById(R.id.mentorName);
+            edittext.requestFocus();
         }
 
         LoadWhereUsedMentorList();
+        edittext = findViewById(R.id.mentorName);
+        edittext.requestFocus();
     }
 
     @Override

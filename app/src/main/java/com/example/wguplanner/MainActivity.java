@@ -1,20 +1,40 @@
 package com.example.wguplanner;
 
+import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.TreeMap;
 
 import Database.dbAssesssment;
@@ -39,9 +59,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
   protected FloatingActionButton fab = null;
   protected Toolbar toolbar = null;
   protected SQLiteDatabase database = null;
-
-
-
+  private ArrayList<String> Reminders = new ArrayList<String>();
+  private String AssessmentReminders = null;
+  private String CourseReminders = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +77,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Reminders.clear();
+        CourseReminders = CourseData.getCoursesbyNamesReminders();
+        AssessmentReminders = AssessmentData.getAssessmentsbyNamesReminders();
+        if (!CourseReminders.isEmpty()) {Reminders.add(CourseReminders+"\n\n");}
+        if (!AssessmentReminders.isEmpty()) {Reminders.add(AssessmentReminders);}
 
     }
 
@@ -118,9 +144,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(course);
             item.setChecked(true);
         } else if (id == R.id.nav_home) {
-            Intent course = new Intent(this, MainActivity.class);
-            startActivity(course);
+            if (!Reminders.isEmpty()){
+                alertView(Reminders.toString());
+            }
+          if (Reminders.isEmpty()) {
+              Intent course = new Intent(this, MainActivity.class);
+              startActivity(course);
+          }
             item.setChecked(true);
+
 
         }else{
             item.setChecked(false);
@@ -376,6 +408,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             e.printStackTrace();
         }
+    }
+
+
+    private void alertView(String message){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        String dialogSubString = " Reminders";
+
+        if(Reminders.size() > 0){ dialogSubString = " Reminder";}
+        dialog.setTitle("You have reminders for today, disable notice at source.")
+                .setMessage(message.replace(",", "").trim())
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent course = new Intent(MainActivity.this, MainActivity.class);
+                        startActivity(course);
+                        dialog.dismiss();
+                    }
+                }).show();
+
     }
 
 }

@@ -1,7 +1,9 @@
 package Utilities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.TreeMap;
 import models.Assessment;
 import models.Course;
@@ -22,6 +24,29 @@ public class AssessmentData {
             Collections.sort(Assessments);
         }
         return Assessments;
+    }
+
+    public static String getAssessmentsbyNamesReminders() {
+        //load the terms by names
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        String today = format.format(date);
+
+        StringBuilder assessmentList = new StringBuilder();
+
+        for (String AssessmentName : CreatedAssessment.keySet()) {
+
+            if (CreatedAssessment.get(AssessmentName).isReminderSet().equals("Yes")){
+                if (today.equals(CreatedAssessment.get(AssessmentName).getGoalDate())){
+                    if (!assessmentList.toString().contains("Assessment Reminder/s: ")){
+                        assessmentList.append("Assessment Reminder/s: ");
+                    }
+                   assessmentList.append(AssessmentName+ " - " +CreatedAssessment.get(AssessmentName).getGoalDate());
+                   assessmentList.append("\n");
+                }
+            }
+        }
+        return assessmentList.toString().replace("[]", "").trim();
     }
 
     public static ArrayList<String> getWhereUsedAssessment(String AssessmentName){

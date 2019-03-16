@@ -29,5 +29,9 @@
     <string name="CourseLabel">Course:</string>
     <string name="CourseListLabel">Where Used: </string>
     <string name="RemindMeLabel">Remind Me</string>
-    <string name="MentorNameLabel">Name: </string>\    <string name="EmailLabel">Email: </string>     <string name="PhoneLabel">Phone: </string>
+    <string name="MentorNameLabel">Name: </string>\
+    <string name="EmailLabel">Email: </string>
+    <string name="PhoneLabel">Phone: </string>
+    <string name="channel_name">WGU Planner</string>
+    <string name="channel_description">Schedule System</string>
 </resources>

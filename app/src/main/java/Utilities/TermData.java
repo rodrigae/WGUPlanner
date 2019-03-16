@@ -14,6 +14,20 @@ public class TermData {
   //  private static TreeMap<String, ArrayList<String>> AssignCourseList = new TreeMap<>();
 
 
+    public static ArrayList<String> getTermbyNamesWithDates(){
+        //load the terms by names
+        ArrayList<String> terms = new ArrayList<>();
+        for (String TermName : CreatedTermList.keySet()){
+            terms.add(TermName + " \n from " + CreatedTermList.get(TermName).getStartDate() + " to " + CreatedTermList.get(TermName).getEndDate());
+        }
+
+        if (terms != null){
+            //sort in order
+            Collections.sort(terms);
+        }
+        return terms;
+    }
+
     public static ArrayList<String> getTermbyNames(){
         //load the terms by names
         ArrayList<String> terms = new ArrayList<>();
@@ -27,7 +41,6 @@ public class TermData {
         }
         return terms;
     }
-
     public static ArrayList<String> getAssignedCoursesByTerm(String TermName) {
         ArrayList<String> courses = new ArrayList<>();
         courses = AssignedCourses.get(TermName);

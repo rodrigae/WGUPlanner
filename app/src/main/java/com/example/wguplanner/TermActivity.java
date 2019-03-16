@@ -47,6 +47,7 @@ public class TermActivity extends MainActivity {
                 try {
                     //Load the term into the TermDetailsActivity
                     String termName = terms.getItemAtPosition(position).toString();
+                    termName = termName.substring(0,termName.indexOf("\n")).trim();
                     Intent intent = new Intent(TermActivity.this, TermDetailsActivity.class);
                     intent.putExtra("Term", termName);
                     startActivity(intent);
@@ -67,13 +68,11 @@ public class TermActivity extends MainActivity {
             //get the list
             ListView termListAdpt = findViewById(R.id.termListView);
             //set the adapter for term list
-            TermAdapter = new ArrayAdapter<String>(TermActivity.this, android.R.layout.simple_list_item_1, TermData.getTermbyNames());
+            TermAdapter = new ArrayAdapter<String>(TermActivity.this, android.R.layout.simple_list_item_1, TermData.getTermbyNamesWithDates());
             termListAdpt.setAdapter(TermAdapter);
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
-
-
-}
+ }

@@ -42,7 +42,6 @@ public class AssessmentActivity extends MainActivity {
                     Intent intent = new Intent(AssessmentActivity.this, AssessmentDetailsActivity.class);
                     intent.putExtra("Assessment", AssessmentName);
                     startActivity(intent);
-
                 }catch(Exception e){
                     e.printStackTrace();
                 }

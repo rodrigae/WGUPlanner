@@ -86,8 +86,6 @@ public class TermDetailsActivity extends MainActivity {
             }
         });
 
-        Snackbar.make(contentView, "Select item from list to assign or un-assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
         //assign the items for later use
         if (TermName == null){
             AvailableCourseItems = CourseData.getCoursesbyNames();
@@ -95,7 +93,10 @@ public class TermDetailsActivity extends MainActivity {
             assignedCourseItem = TermData.getAssignedCoursesByTerm(TermName);
             AvailableCourseItems = TermData.getAvailableCoursesByTerm(TermName);
         }
-
+        if (!AvailableCourseItems.isEmpty()) {
+            Snackbar.make(contentView, "Select item from list to assign or un-assigned", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        }
+        edittext = findViewById(R.id.TermTitleEditText); edittext.requestFocus();
     }
 
     @Override
