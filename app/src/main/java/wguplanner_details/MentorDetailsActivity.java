@@ -86,11 +86,9 @@ public class MentorDetailsActivity extends MainActivity {
                 if (update){
                     //delete the course from course table and assignedMentor
                     dbStatements.deleteMentor(mentorName, database);
-                    database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
-                }
+                   }
 
                 //save the assesment data
-                database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                 boolean saveMentor = dbStatements.SaveMentorDetails(mentor, database);
 
                 if (saveMentor) {
@@ -115,9 +113,7 @@ public class MentorDetailsActivity extends MainActivity {
                 if (whereUsed == null || whereUsed.isEmpty()) {
                     //delete the Course from Course table and assignedcourse
                     dbStatements.deleteMentor(mentorName, database);
-                    database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                     ReloadData();
-
                     startActivity(new Intent(MentorDetailsActivity.this, MentorActivity.class));
                 }else{
                     Snackbar.make(contentView, "This mentor is being used in course/s. " + whereUsed , Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -129,6 +125,7 @@ public class MentorDetailsActivity extends MainActivity {
 
 
         }
+        database.close();
         return true;
     }
 

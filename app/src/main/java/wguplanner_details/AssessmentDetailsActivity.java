@@ -48,8 +48,6 @@ public class AssessmentDetailsActivity extends MainActivity {
         background.setVisibility(View.GONE);
         drawer.addView(contentView,0);
 
-        database = new dbSqlLiteManager(this).getWritableDatabase();
-
        assessmentName = getIntent().getStringExtra("Assessment");
         if (assessmentName != null){
             setTheFieldsForEditing();
@@ -111,18 +109,13 @@ public class AssessmentDetailsActivity extends MainActivity {
                 if (update){
                     //delete the course from course table and assignedAssessment
                     dbStatements.deleteAssessment(assessmentName, database);
-                    database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
 
                 }
-
                 //save the assesment data
-                database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                 boolean saveAssessment = dbStatements.SaveAssessmentDetails(assessment, database);
-
-
                 if (saveAssessment) {
                     AssessmentData.AddCreatedAssessment(assessment.getName(),assessment);
-                    LoadAssessmentList();
+                    ReloadData();
                     startActivity(new Intent(AssessmentDetailsActivity.this, AssessmentActivity.class));
                 } else {
                     Snackbar.make(contentView, " Assessment Saved: " + saveAssessment, Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -142,10 +135,8 @@ public class AssessmentDetailsActivity extends MainActivity {
               if (whereUsed == null || whereUsed.isEmpty()) {
                         //delete the Course from Course table and assignedcourse
                     dbStatements.deleteAssessment(assessmentName, database);
-                    database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
-                    LoadAssessmentList();
-
-                        startActivity(new Intent(AssessmentDetailsActivity.this, AssessmentActivity.class));
+                    ReloadData();
+                    startActivity(new Intent(AssessmentDetailsActivity.this, AssessmentActivity.class));
                 }else{
                     Snackbar.make(contentView, "This assessment is being used in course/s. " + whereUsed , Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
@@ -156,6 +147,7 @@ public class AssessmentDetailsActivity extends MainActivity {
 
 
         }
+        database.close();
         return true;
     }
 

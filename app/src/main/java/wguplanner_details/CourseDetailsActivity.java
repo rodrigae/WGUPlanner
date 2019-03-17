@@ -66,8 +66,6 @@ public class CourseDetailsActivity extends MainActivity {
         background.setVisibility(View.GONE);
         drawer.addView(contentView,0);
 
-        //obtain access from the database
-        database = new dbSqlLiteManager(this).getWritableDatabase();
 
         //load the data if the user is attempting to edit an item.
         CourseName = getIntent().getStringExtra("Assessment");
@@ -148,10 +146,9 @@ public class CourseDetailsActivity extends MainActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_save) {
+           if (id == R.id.action_save) {
                     Course = new Course(getData("startreminder"),getData("endreminder"),getData("CourseTitle") ,getData("startdate") , getData("enddate"), getData("notes"), getData("assessmentId"),getData("MentorId"));
                     if (validateEntry()) {
-
                         database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                         boolean update = CourseName != null; //is this an update or not, we do this by checking if a Course Name was passed to this Activity
 
@@ -159,25 +156,15 @@ public class CourseDetailsActivity extends MainActivity {
                         if (update){
                             //delete the course from course table and assignedAssessment
                             dbStatements.deleteCourse(CourseName, database);
-                            database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                             dbStatements.deleteAssignedAssessment(CourseName, database);
-                            database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                             dbStatements.deleteAssignedMentors(CourseName, database);
                         }
-
-                        //save the Course data
-                        database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
-                        boolean saveCourse = dbStatements.SaveCourseDetails(Course, database);
-
-
-                            //save the assigned course
-                            database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
-                        boolean  saveAssignedAssessment = dbStatements.SaveAssignedCourseAssessment(Course, database, assignedAssessmentItem);
-
-                            //save the assigned mentor
-                        database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
+                         //save the Course data
+                         boolean saveCourse = dbStatements.SaveCourseDetails(Course, database);
+                         //save the assigned course
+                         boolean  saveAssignedAssessment = dbStatements.SaveAssignedCourseAssessment(Course, database, assignedAssessmentItem);
+                         //save the assigned mentor
                          boolean saveAssignedMentor = dbStatements.SaveAssignedCourseMentor(Course, database, assignedMentorItem);
-
 
                         if (saveCourse && saveAssignedAssessment && saveAssignedMentor) {
                           //  CourseData.AddNewCreatedCourse(Course.getTitle(),Course);//this is to update the term list for when term is opened, after refresh
@@ -187,7 +174,6 @@ public class CourseDetailsActivity extends MainActivity {
                                 // CourseData.addNewAssignedMentor(Course.getTitle(), assignedMentorItem);
                             }
                             ReloadData();
-
                             startActivity(new Intent(CourseDetailsActivity.this, CourseActivity.class));
                         } else {
                             Snackbar.make(contentView, "Course Saved: " + saveCourse + " Assessment Saved: " + saveAssignedAssessment + " Mentor Saved: " + saveAssignedMentor, Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -217,17 +203,12 @@ public class CourseDetailsActivity extends MainActivity {
                     if (assignedAssessmentItem.isEmpty() && assignedMentorItem.isEmpty()) {
                         //delete the Course from Course table and assignedcourse
                         dbStatements.deleteCourse(CourseName, database);
-                        database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                         dbStatements.deleteAssignedAssessment(CourseName, database);
-                        database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                         dbStatements.deleteAssignedMentors(CourseName, database);
-                        LoadCourseList();
-                        LoadAssessmentList();
-                        LoadCreatedMentor();
-
+                        ReloadData();
                         startActivity(new Intent(CourseDetailsActivity.this, CourseActivity.class));
                     } else {
-                        Snackbar.make(contentView, "Please remove all assigned assessment before deleting this Course.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        Snackbar.make(contentView, "Please remove all assigned items before deleting this Course.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
                 }else{
                     Snackbar.make(contentView, "This course is being used in term/s: " + termsList , Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -253,6 +234,7 @@ public class CourseDetailsActivity extends MainActivity {
                 e.printStackTrace();
             }
         }
+             database.close();
             return true;
         }
 

@@ -325,31 +325,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    protected void LoadCreatedMentor(){
-        //load the term list
-        Cursor c = null;
-        TreeMap<String, Mentor> data = new TreeMap<>();
-        try {
-            Mentor mentorItem = null;
-            //get the list
-            //get the database access
-            database = new dbSqlLiteManager(this).getReadableDatabase(); //get the database access
-            c = database.rawQuery("SELECT " + dbMentor.COLUMN_MENTORNAME +","+ dbMentor.COLUMN_MENTOREMAIL+","+ dbMentor.COLUMN_PHONE+" FROM "+ dbMentor.TABLE_NAME, null);
-            if (c.moveToFirst()) {
-                do {
-                    mentorItem = new Mentor(c.getString(0), c.getString(1), c.getString(2));
-                } while (c.moveToNext());
-            }
-            MentorData.setCreatedMentor(data);
-            database.close();
-        }catch(Exception e){
-            if (e.getMessage().contains("no such table")){
-                database = new dbSqlLiteManager(this).getWritableDatabase();
-                database.execSQL(dbMentor.CREATE_TABLE);
-            }
-            e.printStackTrace();
-        }
-    }
 
     private void LoadAssignedAssessmentList(){
         //load the Course list assigned

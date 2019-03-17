@@ -59,8 +59,6 @@ public class TermDetailsActivity extends MainActivity {
         drawer.addView(contentView,0);
 
 
-        //obtain access from the database
-        database = new dbSqlLiteManager(this).getWritableDatabase();
         //load the data if the user is attempting to edit an item.
         TermName = getIntent().getStringExtra("Term");
         if (TermName != null){
@@ -122,16 +120,13 @@ public class TermDetailsActivity extends MainActivity {
                 if (update){
                     //delete the term from term table and assignedcourse
                     dbStatements.deleteTerm(TermName, database);
-                    database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                     dbStatements.deleteAssignedCourses(TermName, database);
                 }
                 //save the term data
-                database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                 boolean saveTerm = dbStatements.SaveTermDetails(term, database);
 
                 //save the assigned course
-                database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
-                boolean saveAssignedCourse = dbStatements.SaveAssignedTermCourse(term, database, assignedCourseItem);
+                 boolean saveAssignedCourse = dbStatements.SaveAssignedTermCourse(term, database, assignedCourseItem);
 
                 if (saveTerm && saveAssignedCourse) {
                     TermData.addCreatedTermList(term.getTitle(),term);//this is to update the term list for when term is opened, after refresh
@@ -139,8 +134,7 @@ public class TermDetailsActivity extends MainActivity {
                         //tells the system is a new entry
                         TermData.addNewAssignedCourses(term.getTitle(), assignedCourseItem);
                     }
-                    LoadCourseList();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
-                    LoadTermList();
+                    ReloadData();
                     startActivity(new Intent(TermDetailsActivity.this, TermActivity.class));
 
                 } else {
@@ -163,11 +157,8 @@ public class TermDetailsActivity extends MainActivity {
                 if (assignedCourseItem.isEmpty()) {
                     //delete the term from term table and assignedcourse
                     dbStatements.deleteTerm(TermName, database);
-                    database = new dbSqlLiteManager(this).getWritableDatabase();//Re-open the connection, it is being closed at the previous statement
                     dbStatements.deleteAssignedCourses(TermName, database);
-                    LoadCourseList();//Load Course lists, used in TermDetailsActivity, and also CourseActivity
-                    LoadTermList();
-
+                    ReloadData();
                     startActivity(new Intent(TermDetailsActivity.this, TermActivity.class));
                 }else{
                     Snackbar.make(contentView, "Please remove all assigned courses before deleting this term.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -176,6 +167,7 @@ public class TermDetailsActivity extends MainActivity {
                 Snackbar.make(contentView, "You cannot delete a new creation", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         }
+        database.close();//close the connection when done.
         return true;
     }
 
